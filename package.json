@@ -1,0 +1,26 @@
+{
+  "name": "soundscape",
+  "version": "1.0.0",
+  "description": "Music sharing social platform",
+  "homepage": "https://github.com/jmcelhone/Soundscape#readme",
+  "bugs": {
+    "url": "https://github.com/jmcelhone/Soundscape/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmcelhone/Soundscape.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "typescript": "^5.9.3"
+  }
+}
