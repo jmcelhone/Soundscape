@@ -6,7 +6,7 @@ const port = 8000
 console.log("Starting server...");
 
 // start server
-app.listen(port, function(err) => {
+app.listen(port, function(err) {
     if (err){
         throw err;
     } else {
