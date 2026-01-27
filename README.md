@@ -6,8 +6,12 @@ Soundscape is a music-sharing social platform that allows users to post what the
 ```
 soundscape/
 ├── src/
+│   ├── components/
+│   │   └── index.tsx
 │   ├── app.ts
 │   └── server.ts
+├── public/
+│   └── index.html
 ├── package.json
 ├── package-lock.json
 ├── tsconfig.json
