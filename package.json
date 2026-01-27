@@ -18,6 +18,7 @@
     "start": "node src/server.ts"
   },
   "dependencies": {
+    "@types/node": "^25.0.10",
     "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
     "express": "^5.2.1",
