@@ -199,54 +199,6 @@ The most serious risk is integrating with a third-party music service API since 
 
 ---
 
-## Team Roles
-
-- **Christopher:** Designing backend for database and React frontend integration.
-- **Leo:** Designing backend for user authentication and React frontend integration.
-- **Tiffany:** Designing React frontend for general UX and user authentication and user posts.
-- **Jeremy:** Designing React frontend for general UX and map page and user/song discoverability.
-
----
-
-## Timeline
-
-### Week 1: Planning & Repo Setup
-- GitHub repo structure with included README
-- Schema drafted (users, friends, posts)
-
-### Week 2: Planning technical approach and developing team roles
-
-### Week 3: Database design, authentication in, home page
-- Register/login/logout working
-- Password security implemented
-- Database correctly stores user information
-
-### Week 4: Start implementing integration with spotify, prototype map page
-- Connect to Spotify works
-- Track selection works
-- Tokenization of song stores in server
-- Map renders users with leaflet
-- Markers shows most recent posts
-- Clicking marker shows post details
-
-### Week 5: Database integration, CRUD for posts
-- Creating posts works for manual song entry
-- Location selected by user or GPS
-- Posts are stored in database and retrievable
-
-### Week 6: Friend system working
-- Search for friend request works
-- Friend add/remove works
-- Friend list properly stored and populated from database
-
-### Week 7: Planning deployment and CI/CD
-
-### Week 8: Stretch goals & product testing
-
-### Week 9: Final testing and deployment
-
----
-
 ## Major Features
 - User authentication and profile management
 - Friend system
@@ -259,8 +211,6 @@ The most serious risk is integrating with a third-party music service API since 
 - Commenting system
 
 ---
-
-## Milestone 3
 
 ## Software Architecture
 
