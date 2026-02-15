@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import { createClient, type QueryData, type QueryError } from '@supabase/supabase-js';
 import { type Database } from './supabase.ts';
 
@@ -16,7 +16,7 @@ const supabase = createClient<Database>(
 );
 
 // routing
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.status(200).send("Hello World");
 });
 
