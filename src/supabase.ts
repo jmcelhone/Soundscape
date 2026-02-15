@@ -41,113 +41,85 @@ export type Database = {
     Tables: {
       friends: {
         Row: {
-          userid1: number
-          userid2: number
+          userid1: string
+          userid2: string
         }
         Insert: {
-          userid1: number
-          userid2: number
+          userid1: string
+          userid2: string
         }
         Update: {
-          userid1?: number
-          userid2?: number
+          userid1?: string
+          userid2?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "friends_userid1_fkey"
-            columns: ["userid1"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "friends_userid2_fkey"
-            columns: ["userid2"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       posts: {
         Row: {
           comment: Json | null
           location: unknown
+          postid: number
           songid: number | null
           time: string
-          userid: number
+          userid: string
         }
         Insert: {
           comment?: Json | null
           location?: unknown
+          postid?: number
           songid?: number | null
           time: string
-          userid: number
+          userid: string
         }
         Update: {
           comment?: Json | null
           location?: unknown
+          postid?: number
           songid?: number | null
           time?: string
-          userid?: number
+          userid?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "posts_userid_fkey"
-            columns: ["userid"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       useractivity: {
         Row: {
           location: unknown
-          privacystatus: string
           songid: number | null
-          userid: number
+          userid: string
         }
         Insert: {
           location?: unknown
-          privacystatus: string
           songid?: number | null
-          userid: number
+          userid: string
         }
         Update: {
           location?: unknown
-          privacystatus?: string
           songid?: number | null
-          userid?: number
+          userid?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "useractivity_userid_fkey"
-            columns: ["userid"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      users: {
+      usersettings: {
         Row: {
-          creationdate: string
-          id: number
-          password: string
-          username: string
+          defaultpoststatus: number
+          id: string
+          locationstatus: number
+          nowplayingstatus: number
+          username: string | null
         }
         Insert: {
-          creationdate: string
-          id?: number
-          password: string
-          username: string
+          defaultpoststatus: number
+          id: string
+          locationstatus: number
+          nowplayingstatus: number
+          username?: string | null
         }
         Update: {
-          creationdate?: string
-          id?: number
-          password?: string
-          username?: string
+          defaultpoststatus?: number
+          id?: string
+          locationstatus?: number
+          nowplayingstatus?: number
+          username?: string | null
         }
         Relationships: []
       }
