@@ -8,6 +8,7 @@ soundscape/
 ├── src/
 │   └── components/
 ├── public/
+├── sql/
 ├── package.json
 ├── package-lock.json
 ├── tsconfig.json

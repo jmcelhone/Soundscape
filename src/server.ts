@@ -1,22 +1,17 @@
-import express from 'express';
-const app = express()
-app.use(express.json())
+import * as fs from 'fs';
+import * as https from 'https';
+import app from './app.ts';
 
-const port: Number = 8000;
+const port: Number = Number(process.env.PORT!);
 
-// setup environment
-console.log("Starting server on port:" + port);
-
-// routing
-app.get('/', (req, res) => {
-    res.status(200).send("Hello World");
-});
+// get HTTPS options
+const options: https.ServerOptions = {
+    key: fs.readFileSync("key.pem"),
+    cert: fs.readFileSync("cert.pem"),
+    passphrase: process.env.HTTPS_KEY_PASSPHRASE!
+};
 
 // start server
-app.listen(port, function(err) {
-    if (err){
-        throw err;
-    } else {
-        console.log("Server listening on port " + port);
-    }
+https.createServer(options, app).listen(port, () => {
+    console.log("Server listening on port " + port);
 });
