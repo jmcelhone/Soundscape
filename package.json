@@ -15,7 +15,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node src/server.ts"
+    "start": "node --env-file .env src/server.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",
