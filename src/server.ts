@@ -1,19 +1,9 @@
-import express from 'express';
-const app = express()
-app.use(express.json())
+import app from './app.ts';
 
-const port: Number = 8000;
-
-// setup environment
-console.log("Starting server on port:" + port);
-
-// routing
-app.get('/', (req, res) => {
-    res.status(200).send("Hello World");
-});
+const port: Number = Number(process.env.PORT!);
 
 // start server
-app.listen(port, function(err) {
+app.listen(port, function(err){
     if (err){
         throw err;
     } else {
