@@ -2,11 +2,14 @@ import express, { type Request, type Response } from 'express';
 import { createClient, type QueryData, type QueryError } from '@supabase/supabase-js';
 import { createServerClient, parseCookieHeader, serializeCookieHeader } from '@supabase/ssr';
 import { type Database } from './supabase.ts';
+import cors from "cors";
+
 
 // create express app
 const app = express()
 
 // middleware
+app.use(cors());
 app.use(express.json())
 
 // create supabase database
@@ -69,7 +72,7 @@ app.get("/auth/callback", async (req: Request, res: Response) => {
 });
 
 app.get('/', (req: Request, res: Response) => {
-    res.status(200).send("Hello World");
+    res.status(200).send("Hello World from Express");
 });
 
 app.use((req: Request, res: Response) => {
