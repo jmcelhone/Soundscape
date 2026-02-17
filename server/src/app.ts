@@ -40,20 +40,18 @@ app.get("/auth/spotify/login", async (req: Request, res: Response) => {
 app.get("/auth/callback", async (req: Request, res: Response) => {
     const code = req.query.code;
     const next = req.query.next ?? "/";
-
-    // TODO *****************************
-    // Integrate persist login with OAuth
-    // **********************************
-    
-    // Debug ************************************
-    console.log("Code:", code, "\n Next:", next);
-    // ******************************************
     
     if (code) {
         const supabase = createServerClient(
             supabaseURL,
             supabaseKey,
             {
+                auth: {
+                    flowType: 'pkce',
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: true,
+                },
                 cookies: {
                     getAll() {
                         return parseCookieHeader(req.headers.cookie ?? '');
@@ -68,7 +66,7 @@ app.get("/auth/callback", async (req: Request, res: Response) => {
         );
         await supabase.auth.exchangeCodeForSession(code);
     }
-    res.redirect(303, `/${next.slice(1)}`);
+    res.redirect(303, 'http://localhost:5173/');
 });
 
 app.get('/', (req: Request, res: Response) => {

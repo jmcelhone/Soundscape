@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import MakePost from "./MakePost.tsx";
+import LoginButton from "./loginButton.tsx";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <h1>Hello World!</h1>
       <h2>{message}</h2>
       <MakePost />
+      <LoginButton />
     </div>
   );
 }
