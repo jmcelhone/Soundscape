@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import MakePost from "./MakePost.tsx";
 import LoginButton from "./loginButton.tsx";
+import LogoutButton from "./logoutButton.tsx";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <h2>{message}</h2>
       <MakePost />
       <LoginButton />
+      <LogoutButton />
     </div>
   );
 }
