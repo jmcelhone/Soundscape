@@ -1,0 +1,42 @@
+{
+  "name": "soundscape",
+  "version": "1.0.0",
+  "description": "Music sharing social platform",
+  "homepage": "https://github.com/jmcelhone/Soundscape#readme",
+  "bugs": {
+    "url": "https://github.com/jmcelhone/Soundscape/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmcelhone/Soundscape.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file .env src/server.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.95.3",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.0.10",
+    "@types/react": "^19.2.9",
+    "@types/react-dom": "^19.2.3",
+    "cors": "^2.8.6",
+    "cypress": "^15.10.0",
+    "express": "^5.2.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19"
+  }
+}
