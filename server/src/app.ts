@@ -76,38 +76,51 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post("/posts", async (req: Request, res: Response) => {
+  try {
+    // Pull from JSON
+    const { userID, songTitle, artistName, latitude, longitude, comment } = req.body;
 
-    try {
-        const { userID, songTitle, artistName, latitude, longitude, comment } = req.body;
-
-        if (!userID || !songTitle || latitude === undefined || longitude === undefined) {
-            return res.status(400).json({ error: "Missing required fields" });
+    // Validate required fields
+    if (!songTitle || typeof songTitle !== "string") {
+      return res.status(400).send("songTitle is required and must be a string");
     }
 
+    // Latitude/longitude, placeholder
+    if (typeof latitude !== "number" || typeof longitude !== "number") {
+      return res.status(400).send({"latitude and longitude must be numbers"});
+    }
+
+    // Build new post and insert into Supabase
+    const newPost = {
+      userid: null, // Temporary, waiting for authentication to work
+      time: new Date().toISOString(),
+      songid: null,
+      location: `(${latitude},${longitude})`,
+      comment: {
+        songTitle,
+        artistName: artistName ?? "",
+        text: comment ?? ""
+      }
+    };
+
+    // Insert into Supabase
     const { data, error } = await supabase
-        .from('posts')
-        .insert({
-            user_id: userID,
-            song_title: songTitle,
-            artist_name: artistName,
-            latitude: latitude,
-            longitude: longitude,
-            comment: comment
-        })
-        .select('*')
-        .single();
+      .from("posts")
+      .insert(newPost)
+      .select()
+      .single();
 
-        if (error) {
-            console.error(error);
-            return res.status(500).json({ error: "Database insert failed" });
-        }
-
-        res.ststus(201).json(data);
-        
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server error" });
+    if (error) {
+      console.error("Supabase insert error:", error);
+      return res.status(500).send("Database insert failed");
     }
+
+    // Return the created row to the frontend
+    return res.status(201).json(data);
+  } catch (err) {
+    console.error("POST /posts error:", err);
+    return res.status(500).send("Server error");
+  }
 });
 
 app.use((req: Request, res: Response) => {
