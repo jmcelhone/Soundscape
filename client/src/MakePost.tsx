@@ -97,17 +97,36 @@ const MakePost = () => {
               onClick={async () => {
 
                 try {
-                  const newResourceData = {
-                    song: songName,
-                    location: location,
-                    comment: comment
+                  // Build JSON payload that sends to backend
+                  const payload = {
+                    userID: userId,
+                    songTitle: songName,
+                    artistName: "", // Placeholder
+                    latitude: null, // Placeholder
+                    longitude: null, // Placeholder
+                    comment: comment,
                   };
-                  //to-do send info to supabase
+                  // Send POST request to backend endpoint
+                  const res = await fetch ("https://localhost:8000/posts", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                  });
+                  // If backend returns error, throw error
+                  if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(errText);
+                  }
+                  // Parse JSON response from backend and log created post
+                  const created = await res.json();
+                  console.log("Created post:", created);
+
                   closeModal();
-                  console.log("Successfully added resource with reference:");
                 } catch (error) {
                   closeModal();
-                  console.error("Failed to add resource:", error);
+                  console.error("Failed to add post:", error);
                 }
               }}
             >
