@@ -9,7 +9,10 @@ import cors from "cors";
 const app = express()
 
 // middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://localhost:8000",
+  credentials: true
+}));
 app.use(express.json())
 
 // create supabase database
@@ -92,7 +95,7 @@ app.post("/posts", async (req: Request, res: Response) => {
 
     // Build new post and insert into Supabase
     const newPost = {
-      userid: null, // Temporary, waiting for authentication to work
+      userid: userID ?? "00000000-0000-0000-0000-000000000000", // temp until auth
       time: new Date().toISOString(),
       songid: null,
       location: `(${latitude},${longitude})`,
