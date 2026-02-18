@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import MakePost from "./MakePost.tsx";
 import { useEffect, useState } from "react";
+import MapView from './MapView.tsx';
 
 function App() {
   const [message, setMessage] = useState("");
@@ -16,6 +17,7 @@ function App() {
       </header>
       <h1>Hello World!</h1>
       <h2>{message}</h2>
+      <MapView />
       <MakePost />
     </div>
   );
