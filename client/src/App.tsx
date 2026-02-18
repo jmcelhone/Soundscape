@@ -2,6 +2,9 @@ import React from 'react';
 import './App.css';
 import MakePost from "./MakePost.tsx";
 import { useEffect, useState } from "react";
+import SignUpForm from "./SignUpForm.tsx";
+import LoginForm from "./LoginForm.tsx";
+import LogoutButton from "./LogoutButton.tsx";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -17,6 +20,9 @@ function App() {
       <h1>Hello World!</h1>
       <h2>{message}</h2>
       <MakePost />
+      <SignUpForm />
+      <LoginForm />
+      <LogoutButton />
     </div>
   );
 }
