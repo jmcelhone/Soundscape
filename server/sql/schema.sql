@@ -13,12 +13,17 @@ CREATE TABLE userSettings (
 /* Posts Table */
 DROP TABLE IF EXISTS posts;
 CREATE TABLE posts (
-    postID BIGSERIAL NOT NULL PRIMARY KEY,
+    postID BIGSERIAL PRIMARY KEY,
     userID UUID NOT NULL,
-    time TIMESTAMP NOT NULL,
-    songID INT,
-    location POINT,
-    comment JSON,
+    time TIMESTAMP NOT NULL DEFAULT now(),
+
+    songTitle VARCHAR(200) NOT NULL,
+    artistName VARCHAR(200),
+
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+
+    comment TEXT,
 
     FOREIGN KEY (userID) REFERENCES auth.users ON DELETE CASCADE
 );

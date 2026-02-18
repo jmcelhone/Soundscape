@@ -75,6 +75,41 @@ app.get('/', (req: Request, res: Response) => {
     res.status(200).send("Hello World from Express");
 });
 
+app.post("/posts", async (req: Request, res: Response) => {
+
+    try {
+        const { userID, songTitle, artistName, latitude, longitude, comment } = req.body;
+
+        if (!userID || !songTitle || latitude === undefined || longitude === undefined) {
+            return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const { data, error } = await supabase
+        .from('posts')
+        .insert({
+            user_id: userID,
+            song_title: songTitle,
+            artist_name: artistName,
+            latitude: latitude,
+            longitude: longitude,
+            comment: comment
+        })
+        .select('*')
+        .single();
+
+        if (error) {
+            console.error(error);
+            return res.status(500).json({ error: "Database insert failed" });
+        }
+
+        res.ststus(201).json(data);
+        
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 app.use((req: Request, res: Response) => {
     res.status(404).send("Error: 404");
 });
