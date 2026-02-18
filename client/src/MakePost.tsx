@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import './MakePost.css'
-
-const closeModal = () => {
-  const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
-  if (modal) {
-    modal.close();
-  }
-};
+import { useGeolocation } from "@uidotdev/usehooks";
 
 interface LocationCoords {
   latitude: number | null;
@@ -17,13 +11,21 @@ const MakePost = () => {
 
   const [userId, setUserId] = useState<string>("");
   const [songName, setSongName] = useState("");
-  //to do - add geolocation
-  // const [location, setLocation] = useState<LocationCoords>({
-  //   latitude: null,
-  //   longitude: null,
-  // });
-  const [location, setLocation] = useState("");
+  const [artistName, setArtistName] = useState("");
   const [comment, setComment] = useState("");
+
+  // const handleSubmit = (e: React.SubmitEvent) => {
+  //   e.preventDefault();
+    
+  //   // Check if location is valid before submitting
+  //   if (location.latitude === null || location.longitude === null) {
+  //     alert("Please wait for location data to load");
+  //     return;
+  //   }
+  
+  //   console.log("UserID:", userId);
+  //   console.log("Location:", location);
+  // };
 
 
   const openModal = () => {
@@ -66,19 +68,19 @@ const MakePost = () => {
             </div>
 
             <div className="form-section">
-              <label className="section-label">Add your location</label>
-              <textarea
+              <label className="section-label">Artist Name</label>
+              <input
                 placeholder="Type here"
                 className="form-input"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                value={artistName}
+                onChange={(e) => setArtistName(e.target.value)}
                 required
               />
             </div>
 
             <div className="form-section">
               <label className="section-label">Add a comment</label>
-              <textarea
+              <input
                 placeholder="Type here"
                 className="form-input"
                 value={comment}
