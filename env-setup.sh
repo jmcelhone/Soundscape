@@ -4,10 +4,12 @@
 echo "Installing npm packages..."
 npm i
 
+echo "Installing server npm packages..."
 cd server
 npm i
 cd ../
 
+echo "Installing client npm packages..."
 cd client
 npm i
 cd ../
@@ -72,3 +74,4 @@ elif [ ! -f "server/cert.pem" ] || [ ! -f "server/key.pem" ]; then
 
     $(generateHTTPSKeyAndCert $pass)
 fi
+echo
