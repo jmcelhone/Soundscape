@@ -90,7 +90,7 @@ app.post("/posts", async (req: Request, res: Response) => {
 
     // Latitude/longitude, placeholder
     if (typeof latitude !== "number" || typeof longitude !== "number") {
-      return res.status(400).send({"latitude and longitude must be numbers"});
+      return res.status(400).json({ error: "latitude and longitude must be numbers" })
     }
 
     // Build new post and insert into Supabase
