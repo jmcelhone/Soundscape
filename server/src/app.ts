@@ -1,9 +1,7 @@
 import express, { type Request, type Response } from 'express';
-import { createClient, type QueryData, type QueryError } from '@supabase/supabase-js';
-import { createServerClient, parseCookieHeader, serializeCookieHeader } from '@supabase/ssr';
-import { type Database } from './supabase.ts';
+import { type QueryData, type QueryError } from '@supabase/supabase-js';
+import { createClient, createBasicClient, authenticate } from './database.ts';
 import cors from "cors";
-
 
 // create express app
 const app = express()
@@ -13,12 +11,15 @@ app.use(cors());
 app.use(express.json())
 
 // create supabase database
-const supabaseURL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!;
-const supabase = createClient<Database>(
-    supabaseURL,
-    supabaseKey
-);
+const basicSupabase = createBasicClient();
+
+app.get("/auth/test", async (req: Request, res: Response) => {
+    const user = await authenticate(req, res);
+
+    console.log(user);
+
+    res.status(200);
+});
 
 app.get("/auth/confirm", async (req: Request, res: Response) => {
     const tokenHash = req.query.token_hash;
@@ -28,28 +29,7 @@ app.get("/auth/confirm", async (req: Request, res: Response) => {
     console.log(tokenHash, type, next);
 
     if (tokenHash && type) {
-        const supabase = createServerClient(
-            supabaseURL,
-            supabaseKey,
-            {
-                auth: {
-                    flowType: 'pkce',
-                    autoRefreshToken: true,
-                    persistSession: true,
-                    detectSessionInUrl: true,
-                },
-                cookies: {
-                    getAll() {
-                        return parseCookieHeader(req.headers.cookie ?? '');
-                    },
-                    setAll(cookiesToSet) {
-                        cookiesToSet.forEach(({ name, value, options }) =>
-                            res.appendHeader('Set-Cookie', serializeCookieHeader(name, value, options))
-                        );
-                    },
-                },
-            }
-        );
+        const supabase = createClient(req, res);
 
         const { data, error } =  await supabase.auth.verifyOtp({
             type,
