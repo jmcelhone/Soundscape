@@ -34,7 +34,7 @@ export function createClient(req: Request, res: Response) {
 export async function authenticate(req: Request, res: Response): 
     Promise<
         {
-            sub: string,
+            uid: string,
             email: string | undefined,
             email_verified: boolean,
         } | null
@@ -54,7 +54,7 @@ export async function authenticate(req: Request, res: Response):
         if (!metadata) return new Promise((resolve) => { resolve(null); });
         return new Promise((resolve) => {
             resolve({
-                sub: metadata.sub,
+                uid: metadata.sub,
                 email: metadata.email,
                 email_verified: metadata.email_verified
             });
