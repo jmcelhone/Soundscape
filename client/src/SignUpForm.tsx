@@ -15,7 +15,7 @@ export default function SignUpForm() {
             email: email,
             password: password,
             options: {
-                emailRedirectTo: "https://localhost:5173/"
+                emailRedirectTo: "http://localhost:5173/"
             }
         });
 
