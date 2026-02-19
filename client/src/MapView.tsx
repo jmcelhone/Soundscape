@@ -6,6 +6,15 @@ import './MapView.css';
 const defaultZoom = 20;
 const defaultCoords: [number, number] = [44.56699643037226, -123.2737945750708];
 
+interface PostProp {
+  latestPost: {
+    songName: string;
+    artistName: string;
+    comment: string;
+    position: [number, number];
+    timestamp: number;
+  } | null;
+}
 
 function MapUpdater({ position }: { position: [number, number] | null }) {
     const map = useMap();
@@ -18,7 +27,7 @@ function MapUpdater({ position }: { position: [number, number] | null }) {
     return null;
 }
 
-function MapView() {
+function MapView({latestPost}: PostProp) {
     const [position, setPosition] = useState<[number, number] | null>(null);
 
     useEffect(() => {
@@ -27,13 +36,23 @@ function MapView() {
     });
     }, []);
  return (
-    <MapContainer center={defaultCoords} zoom={defaultZoom} scrollWheelZoom={true}>
-    <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
-    <MapUpdater position={position} />
-    </MapContainer>
+    <div>
+        <MapContainer center={defaultCoords} zoom={defaultZoom} scrollWheelZoom={true}>
+        <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <MapUpdater position={position} />
+            {latestPost?.position && (
+                <Marker position={latestPost.position}>
+                    <Popup>
+                        {latestPost.songName} - {latestPost.artistName} <br /> {latestPost.comment}
+                    </Popup>
+                </Marker>
+            )}
+        </MapContainer>
+    </div>
+
  )
 }
 

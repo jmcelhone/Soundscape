@@ -1,31 +1,29 @@
 import React, { useState, useEffect } from "react";
 import './MakePost.css'
-import { useGeolocation } from "@uidotdev/usehooks";
 
-
-const MakePost = () => {
-
+interface PostProp {
+  onPostCreated: (post: {
+    songName: string;
+    artistName: string;
+    comment: string;
+    position: [number, number];
+    timestamp: number;
+  }) => void;
+}
+const MakePost = ({ onPostCreated }: PostProp) => {
+  //waiting for user auth to get userId
   //const [userId, setUserId] = useState<string>("");
   const [songName, setSongName] = useState("");
   const [artistName, setArtistName] = useState("");
   const [comment, setComment] = useState("");
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null >(null);
+  const [position, setPosition] = useState<[number, number] | null >(null);
 
-  const coords = useGeolocation();
-
-  
-  // const handleSubmit = (e: React.SubmitEvent) => {
-  //   e.preventDefault();
-  //   if (coords.loading || coords.error != null) {
-  //     alert("Please wait for location data to load and check permissions");
-  //     return;
-  //   }
-  
-  //   //console.log("UserID:", userId);
-  //   console.log("Location:", coords.latitude, coords.longitude);
-  //   console.log("Song:", songName);
-  // };
+  //grab user location
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((pos) => {
+        setPosition([pos.coords.latitude, pos.coords.longitude]);
+    });
+    }, []);
 
   const openModal = () => {
     const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
@@ -39,6 +37,33 @@ const MakePost = () => {
     if (modal) {
       modal.close();
     }
+  };
+
+  //creates a newPost prop, lifts state to App.tsx
+  const handleSubmit = async () => {
+    if (position != null) {
+      const newPost = {
+        songName,
+        artistName,
+        comment,
+        position: position,
+        timestamp: Date.now()
+      };
+
+      onPostCreated(newPost);
+      console.log("passed to parent")
+
+    } else {
+      alert("Please wait for location to load or enable location")
+    }
+
+    //insert into supabase
+
+    //close modal with successful transfer of prop
+    closeModal();
+    setSongName("");
+    setArtistName("");
+    setComment("");
   };
 
   return (
@@ -95,34 +120,8 @@ const MakePost = () => {
             </button>
             <button
               className="btn"
-              onClick={async () => {
-
-                try {
-                  // const newResourceData = {
-                  //   song: songName,
-                  //   location: location,
-                  //   comment: comment
-                  
-                  if (coords.loading || coords.error != null) {
-                    alert("Please wait for location data to load and check permissions");
-                    return;
-                  } else {
-                    //console.log("UserID:", userId);
-                    setLongitude(coords.longitude)
-                    setLatitude(coords.latitude)
-                    console.log("Location:", coords.latitude, coords.longitude);
-                    console.log("Song:", songName);
-                    console.log("Artist:", artistName);
-                    closeModal();
-                    console.log("Successfully added resource with reference:");
-
-                  }
-              
-                } catch (error) {
-                  closeModal();
-                  console.error("Failed to add resource:", error);
-                }
-              }}
+              onClick= {handleSubmit}
+              disabled={!position || !songName || !artistName}
             >
               Add
             </button>
