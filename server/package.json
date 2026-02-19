@@ -15,7 +15,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node --env-file ../.env src/server.ts"
+    "start": "node --env-file .env src/server.ts",
+    "dev": "nodemon -e .ts --env-file .env src/server.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
@@ -32,6 +33,7 @@
     "cors": "^2.8.6",
     "cypress": "^15.10.0",
     "express": "^5.2.1",
+    "nodemon": "^3.1.11",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "typescript": "^5.9.3"
