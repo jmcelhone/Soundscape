@@ -1,6 +1,6 @@
 {
   "scripts": {
-  "dev": "concurrently \"npm run start --prefix server\" \"npm run dev --prefix client\""
+      "dev": "./env-setup.sh && concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\""
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

@@ -5,10 +5,13 @@ Soundscape is a music-sharing social platform that allows users to post what the
 ## Repo Layout
 ```
 soundscape/
-├── src/
-│   └── components/
-├── public/
-├── sql/
+├── client/
+│   ├── public/
+│   └── src/
+│       └── assets/
+├── server/
+│   ├── sql/
+│   └── src/
 ├── package.json
 ├── package-lock.json
 ├── tsconfig.json
