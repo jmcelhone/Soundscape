@@ -75,7 +75,6 @@ const MakePost = ({ onPostCreated }: PostProp) => {
       };
 
       onPostCreated(newPost);
-      console.log("passed to parent");
 
     } else {
       alert("Please wait for location to load or enable location");
