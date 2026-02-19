@@ -32,6 +32,13 @@ const MakePost = ({ onPostCreated }: PostProp) => {
     }
   };
 
+  const closeModal = () => {
+  const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
+  if (modal) {
+    modal.close();
+  }
+};
+
   const submitPost = async () => {
     const payload = {
       userID: null,                 // temporary until auth
@@ -68,13 +75,20 @@ const MakePost = ({ onPostCreated }: PostProp) => {
       };
 
       onPostCreated(newPost);
-      console.log("passed to parent")
+      console.log("passed to parent");
 
     } else {
-      alert("Please wait for location to load or enable location")
+      alert("Please wait for location to load or enable location");
+      return;
     }
 
     //insert into supabase
+    try {
+      const created = await submitPost();
+      console.log("Created post:", created);
+    } catch (error) {
+      console.error("Failed to add post:", error);
+    }
 
     //close modal with successful transfer of prop
     closeModal();
@@ -130,7 +144,6 @@ const MakePost = ({ onPostCreated }: PostProp) => {
               />
             </div>
           </form>
-
           <div className="modal-actions">
             <button className="btn" onClick={closeModal}>
               Close
@@ -138,7 +151,6 @@ const MakePost = ({ onPostCreated }: PostProp) => {
             <button
               className="btn"
               onClick= {handleSubmit}
-              disabled={!position || !songName || !artistName}
             >
               Add
             </button>
