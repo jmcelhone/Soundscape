@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import SignUpForm from "./SignUpForm.tsx";
 import LoginForm from "./LoginForm.tsx";
 import LogoutButton from "./LogoutButton.tsx";
+import MapView from './MapView.tsx';
 
 function App() {
   const [message, setMessage] = useState("");
@@ -19,6 +20,7 @@ function App() {
       </header>
       <h1>Hello World!</h1>
       <h2>{message}</h2>
+      <MapView />
       <MakePost />
       <SignUpForm />
       <LoginForm />
