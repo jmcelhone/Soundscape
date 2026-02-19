@@ -9,6 +9,17 @@ import MapView from './MapView.tsx';
 
 function App() {
   const [message, setMessage] = useState("");
+  const [latestPost, setLatestPost] = useState<{
+    songName: string;
+    artistName: string;
+    comment: string;
+    position: [number, number];
+    timestamp: number;
+  } | null>(null);
+
+  const handleNewPost = (post) => {
+    setLatestPost(post);
+  };
   useEffect(() => {
     fetch("https://localhost:8000/")
       .then((res) => res.text())
@@ -20,8 +31,8 @@ function App() {
       </header>
       <h1>Hello World!</h1>
       <h2>{message}</h2>
-      <MapView />
-      <MakePost />
+      <MapView latestPost={latestPost} />
+      <MakePost onPostCreated={handleNewPost}/>
       <SignUpForm />
       <LoginForm />
       <LogoutButton />
