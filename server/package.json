@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --env-file .env src/server.ts",
-    "dev": "nodemon --env-file .env src/server.ts"
+    "dev": "nodemon -e .ts --env-file .env src/server.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",

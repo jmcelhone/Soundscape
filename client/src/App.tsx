@@ -2,6 +2,9 @@ import React from 'react';
 import './App.css';
 import MakePost from "./MakePost.tsx";
 import { useEffect, useState } from "react";
+import SignUpForm from "./SignUpForm.tsx";
+import LoginForm from "./LoginForm.tsx";
+import LogoutButton from "./LogoutButton.tsx";
 import MapView from './MapView.tsx';
 
 function App() {
@@ -30,6 +33,9 @@ function App() {
       <h2>{message}</h2>
       <MapView latestPost={latestPost} />
       <MakePost onPostCreated={handleNewPost}/>
+      <SignUpForm />
+      <LoginForm />
+      <LogoutButton />
     </div>
   );
 }

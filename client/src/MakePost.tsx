@@ -32,11 +32,28 @@ const MakePost = ({ onPostCreated }: PostProp) => {
     }
   };
 
-  const closeModal = () => {
-    const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
-    if (modal) {
-      modal.close();
+  const submitPost = async () => {
+    const payload = {
+      userID: null,                 // temporary until auth
+      songTitle: songName,
+      artistName: "",               // optional
+      latitude: 44.565,             // TEMP placeholder
+      longitude: -123.276,          // TEMP placeholder
+      comment: comment
+    };
+
+    const res = await fetch("https://localhost:8000/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+   });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text);
     }
+
+    return await res.json();
   };
 
   //creates a newPost prop, lifts state to App.tsx
