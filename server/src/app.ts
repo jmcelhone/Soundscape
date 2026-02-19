@@ -20,40 +20,24 @@ const supabase = createClient<Database>(
     supabaseKey
 );
 
-// routing
-app.get("/auth/spotify/login", async (req: Request, res: Response) => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'spotify',
-        options: {
-            redirectTo: 'https://localhost:8000/auth/callback'
-        }
-    });
-
-    if (error) {
-        console.error(error);
-        res.status(500).send("Error: server error on gathering auth redirect.");
-    } else {
-        res.redirect(303, data.url);
-    }
-});
-
-app.get("/auth/callback", async (req: Request, res: Response) => {
-    const code = req.query.code;
+app.get("/auth/confirm", async (req: Request, res: Response) => {
+    const tokenHash = req.query.token_hash;
+    const type = req.query.type;
     const next = req.query.next ?? "/";
 
-    // TODO *****************************
-    // Integrate persist login with OAuth
-    // **********************************
-    
-    // Debug ************************************
-    console.log("Code:", code, "\n Next:", next);
-    // ******************************************
-    
-    if (code) {
+    console.log(tokenHash, type, next);
+
+    if (tokenHash && type) {
         const supabase = createServerClient(
             supabaseURL,
             supabaseKey,
             {
+                auth: {
+                    flowType: 'pkce',
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: true,
+                },
                 cookies: {
                     getAll() {
                         return parseCookieHeader(req.headers.cookie ?? '');
@@ -66,9 +50,25 @@ app.get("/auth/callback", async (req: Request, res: Response) => {
                 },
             }
         );
-        await supabase.auth.exchangeCodeForSession(code);
+
+        const { data, error } =  await supabase.auth.verifyOtp({
+            type,
+            token_hash: tokenHash,
+        });
+
+        console.log(data, error);
+
+        if (!error) {
+            res.redirect(303, next);
+            return;
+        }
     }
-    res.redirect(303, `/${next.slice(1)}`);
+
+    res.redirect(303, `/auth/error`);
+});
+
+app.get("/auth/error", (req: Request, res: Response) => {
+    res.status(401).send("Error authenticating user");
 });
 
 app.get('/', (req: Request, res: Response) => {
