@@ -126,6 +126,61 @@ app.post("/posts", async (req: Request, res: Response) => {
   }
 });
 
+// GET feed of posts
+// Returns the latest post for each friend
+app.get("/feed", async (req: Request, res: Response) => {
+    try {
+        // Read userID from query string
+        const userID = String(req.query.userID ?? "");
+
+        // Validation
+        if (!userID) {
+            return res.status(400).send("userID query parameter is required");
+        }
+
+        // friends table columns: useris1, userid2
+        const { data: friendsRows, error: friendErr } = await supabase
+            .from("friends")
+            .select("userid1, userid2")
+            .or(`userid1.eq.${userID},userid2.eq.${userID}`);
+        
+        if (friendErr) {
+            console.error(friendErr);
+            return res.status(500).send("Friends query failed");
+        }
+
+        // Friends rows gets converted into a list of friend IDs.
+        const friendsIDs = (friendsRows ?? []).map((row) =>
+            row.userid1 === userID ? row.userid2 : row.userid1
+        );
+
+        // Return empty feed if no friends
+        if (friendsIDs.length === 0) {
+            return res.status(200).json([]);
+        }
+
+        // Fetch posts where userid is in friendIDs by newest first
+        const { data: posts, error: postsErr } = await supabase
+        .from("posts")
+        .select("postid, userid, time, location, comment")
+        .in("userid", friendsIDs)
+        .order("time", { ascending: false })
+        .limit(20); // optional limit for now
+
+        if (postsErr) {
+            console.error(postsErr);
+            return res.status(500).send("Posts query failed");
+        }
+
+        // Return posts to frontend
+        return res.status(200).json(posts ?? []);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send("Server error");
+    }
+
+});
+
 app.use((req: Request, res: Response) => {
     res.status(404).send("Error: 404");
 });
