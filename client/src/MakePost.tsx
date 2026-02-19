@@ -2,31 +2,30 @@ import React, { useState, useEffect } from "react";
 import './MakePost.css'
 import { useGeolocation } from "@uidotdev/usehooks";
 
-interface LocationCoords {
-  latitude: number | null;
-  longitude: number | null;
-}
 
 const MakePost = () => {
 
-  const [userId, setUserId] = useState<string>("");
+  //const [userId, setUserId] = useState<string>("");
   const [songName, setSongName] = useState("");
   const [artistName, setArtistName] = useState("");
   const [comment, setComment] = useState("");
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null >(null);
 
+  const coords = useGeolocation();
+
+  
   // const handleSubmit = (e: React.SubmitEvent) => {
   //   e.preventDefault();
-    
-  //   // Check if location is valid before submitting
-  //   if (location.latitude === null || location.longitude === null) {
-  //     alert("Please wait for location data to load");
+  //   if (coords.loading || coords.error != null) {
+  //     alert("Please wait for location data to load and check permissions");
   //     return;
   //   }
   
-  //   console.log("UserID:", userId);
-  //   console.log("Location:", location);
+  //   //console.log("UserID:", userId);
+  //   console.log("Location:", coords.latitude, coords.longitude);
+  //   console.log("Song:", songName);
   // };
-
 
   const openModal = () => {
     const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
@@ -99,14 +98,26 @@ const MakePost = () => {
               onClick={async () => {
 
                 try {
-                  const newResourceData = {
-                    song: songName,
-                    location: location,
-                    comment: comment
-                  };
-                  //to-do send info to supabase
-                  closeModal();
-                  console.log("Successfully added resource with reference:");
+                  // const newResourceData = {
+                  //   song: songName,
+                  //   location: location,
+                  //   comment: comment
+                  
+                  if (coords.loading || coords.error != null) {
+                    alert("Please wait for location data to load and check permissions");
+                    return;
+                  } else {
+                    //console.log("UserID:", userId);
+                    setLongitude(coords.longitude)
+                    setLatitude(coords.latitude)
+                    console.log("Location:", coords.latitude, coords.longitude);
+                    console.log("Song:", songName);
+                    console.log("Artist:", artistName);
+                    closeModal();
+                    console.log("Successfully added resource with reference:");
+
+                  }
+              
                 } catch (error) {
                   closeModal();
                   console.error("Failed to add resource:", error);
