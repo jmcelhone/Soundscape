@@ -15,7 +15,7 @@ interface LocationCoords {
 
 const MakePost = () => {
 
-  const [userId, setUserId] = useState<string>("");
+  // const [userId, setUserId] = useState<string>(""); (commented out until auth is working)
   const [songName, setSongName] = useState("");
   //to do - add geolocation
   // const [location, setLocation] = useState<LocationCoords>({
@@ -33,11 +33,28 @@ const MakePost = () => {
     }
   };
 
-  const closeModal = () => {
-    const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
-    if (modal) {
-      modal.close();
+  const submitPost = async () => {
+    const payload = {
+      userID: null,                 // temporary until auth
+      songTitle: songName,
+      artistName: "",               // optional
+      latitude: 44.565,             // TEMP placeholder
+      longitude: -123.276,          // TEMP placeholder
+      comment: comment
+    };
+
+    const res = await fetch("https://localhost:8000/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+   });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text);
     }
+
+    return await res.json();
   };
 
   return (
@@ -95,19 +112,13 @@ const MakePost = () => {
             <button
               className="btn"
               onClick={async () => {
-
                 try {
-                  const newResourceData = {
-                    song: songName,
-                    location: location,
-                    comment: comment
-                  };
-                  //to-do send info to supabase
+                  const created = await submitPost();
+                  console.log("Created post:", created);
                   closeModal();
-                  console.log("Successfully added resource with reference:");
                 } catch (error) {
+                  console.error("Failed to add post:", error);
                   closeModal();
-                  console.error("Failed to add resource:", error);
                 }
               }}
             >

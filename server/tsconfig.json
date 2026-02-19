@@ -15,6 +15,7 @@
     // "types": ["node"],
     // and npm install -D @types/node
     "allowImportingTsExtensions": true,
+    "noEmit": true,
 
     // Other Outputs
     "sourceMap": true,
