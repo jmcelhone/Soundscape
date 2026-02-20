@@ -21,9 +21,9 @@ const MakePost = ({ onPostCreated }: PostProp) => {
   //grab user location
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((pos) => {
-        setPosition([pos.coords.latitude, pos.coords.longitude]);
-    });
-}, []);
+            setPosition([pos.coords.latitude, pos.coords.longitude]);
+        });
+    }, []);
 
   const openModal = () => {
     const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
@@ -48,7 +48,7 @@ const MakePost = ({ onPostCreated }: PostProp) => {
       comment: comment
     };
 
-    const res = await fetch("https://localhost:8000/posts", {
+    const res = await fetch(location.origin + '/api/posts', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
