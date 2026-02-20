@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from "react";
 import './MakePost.css'
 
-const closeModal = () => {
-  const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
-  if (modal) {
-    modal.close();
-  }
-};
-
-interface LocationCoords {
-  latitude: number | null;
-  longitude: number | null;
+interface PostProp {
+  onPostCreated: (post: {
+    songName: string;
+    artistName: string;
+    comment: string;
+    position: [number, number];
+    timestamp: number;
+  }) => void;
 }
-
-const MakePost = () => {
-
-  const [userId, setUserId] = useState<string>("");
+const MakePost = ({ onPostCreated }: PostProp) => {
+  //waiting for user auth to get userId
+  //const [userId, setUserId] = useState<string>("");
   const [songName, setSongName] = useState("");
-  //to do - add geolocation
-  // const [location, setLocation] = useState<LocationCoords>({
-  //   latitude: null,
-  //   longitude: null,
-  // });
-  const [location, setLocation] = useState("");
+  const [artistName, setArtistName] = useState("");
   const [comment, setComment] = useState("");
+  const [position, setPosition] = useState<[number, number] | null >(null);
 
+  //grab user location
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((pos) => {
+        setPosition([pos.coords.latitude, pos.coords.longitude]);
+    });
+    }, []);
 
   const openModal = () => {
     const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
@@ -34,10 +33,67 @@ const MakePost = () => {
   };
 
   const closeModal = () => {
-    const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
-    if (modal) {
-      modal.close();
+  const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
+  if (modal) {
+    modal.close();
+  }
+};
+
+  const submitPost = async () => {
+    const payload = {
+      userID: null,                 // temporary until auth
+      songTitle: songName,
+      artistName: "",               // optional
+      latitude: 44.565,             // TEMP placeholder
+      longitude: -123.276,          // TEMP placeholder
+      comment: comment
+    };
+
+    const res = await fetch("https://localhost:8000/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+   });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text);
     }
+
+    return await res.json();
+  };
+
+  //creates a newPost prop, lifts state to App.tsx
+  const handleSubmit = async () => {
+    if (position != null) {
+      const newPost = {
+        songName,
+        artistName,
+        comment,
+        position: position,
+        timestamp: Date.now()
+      };
+
+      onPostCreated(newPost);
+
+    } else {
+      alert("Please wait for location to load or enable location");
+      return;
+    }
+
+    //insert into supabase
+    try {
+      const created = await submitPost();
+      console.log("Created post:", created);
+    } catch (error) {
+      console.error("Failed to add post:", error);
+    }
+
+    //close modal with successful transfer of prop
+    closeModal();
+    setSongName("");
+    setArtistName("");
+    setComment("");
   };
 
   return (
@@ -66,19 +122,19 @@ const MakePost = () => {
             </div>
 
             <div className="form-section">
-              <label className="section-label">Add your location</label>
-              <textarea
+              <label className="section-label">Artist Name</label>
+              <input
                 placeholder="Type here"
                 className="form-input"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                value={artistName}
+                onChange={(e) => setArtistName(e.target.value)}
                 required
               />
             </div>
 
             <div className="form-section">
               <label className="section-label">Add a comment</label>
-              <textarea
+              <input
                 placeholder="Type here"
                 className="form-input"
                 value={comment}
@@ -87,29 +143,13 @@ const MakePost = () => {
               />
             </div>
           </form>
-
           <div className="modal-actions">
             <button className="btn" onClick={closeModal}>
               Close
             </button>
             <button
               className="btn"
-              onClick={async () => {
-
-                try {
-                  const newResourceData = {
-                    song: songName,
-                    location: location,
-                    comment: comment
-                  };
-                  //to-do send info to supabase
-                  closeModal();
-                  console.log("Successfully added resource with reference:");
-                } catch (error) {
-                  closeModal();
-                  console.error("Failed to add resource:", error);
-                }
-              }}
+              onClick= {handleSubmit}
             >
               Add
             </button>
