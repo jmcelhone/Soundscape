@@ -23,7 +23,7 @@ const MakePost = ({ onPostCreated }: PostProp) => {
     navigator.geolocation.getCurrentPosition((pos) => {
         setPosition([pos.coords.latitude, pos.coords.longitude]);
     });
-    }, []);
+}, []);
 
   const openModal = () => {
     const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
@@ -41,7 +41,6 @@ const MakePost = ({ onPostCreated }: PostProp) => {
 
   const submitPost = async () => {
     const payload = {
-      userID: null,                 // temporary until auth
       songTitle: songName,
       artistName: "",               // optional
       latitude: 44.565,             // TEMP placeholder

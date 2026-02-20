@@ -31,7 +31,7 @@ export function createClient(req: Request, res: Response) {
     );
 }
 
-export async function authenticate(req: Request, res: Response): 
+export async function authenticate(supabase): 
     Promise<
         {
             uid: string,
@@ -39,8 +39,6 @@ export async function authenticate(req: Request, res: Response):
             email_verified: boolean,
         } | null
     > {
-
-    const supabase = createClient(req, res);
 
     const { data, error } = await supabase.auth.getClaims();
     
