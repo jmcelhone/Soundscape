@@ -21,8 +21,8 @@ const MakePost = ({ onPostCreated }: PostProp) => {
   //grab user location
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((pos) => {
-        setPosition([pos.coords.latitude, pos.coords.longitude]);
-    });
+            setPosition([pos.coords.latitude, pos.coords.longitude]);
+        });
     }, []);
 
   const openModal = () => {
@@ -41,7 +41,6 @@ const MakePost = ({ onPostCreated }: PostProp) => {
 
   const submitPost = async () => {
     const payload = {
-      userID: null,                 // temporary until auth
       songTitle: songName,
       artistName: "",               // optional
       latitude: 44.565,             // TEMP placeholder
@@ -49,7 +48,7 @@ const MakePost = ({ onPostCreated }: PostProp) => {
       comment: comment
     };
 
-    const res = await fetch("https://localhost:8000/posts", {
+    const res = await fetch(location.origin + '/api/posts', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
