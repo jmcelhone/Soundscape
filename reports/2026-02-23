@@ -1,0 +1,44 @@
+**Implementation**
+* **Team report** 
+1. Goals for this week:
+    1. Implement sign-in/up page and login persistence (1 day)
+    2. Implement MAP API (1 day)
+    3. Implement webpage for user CRUD interactions (5 day)
+        - User settings (1 day)
+        - Make/View Posts (2 day)
+        - User location data (1 day)
+        - User music data (2 day)
+    4. Make test suite for user authentication (2 day)
+2. Progress and issues: We implemented the sign-in/up page and login 
+   persistence, the map API, and some CRUD interactions.
+3. Goals planned for next week: 
+    1. Implement Friends System (2 day)
+    2. Map API post viewing (2 day)
+    3. Implement CI/CD with GitHub Actions (1 day)
+    4. Make test suite for existing web page features (3 day)
+    5. Make test suite for user authentication (2 day)
+    6. Make test suite for server-side CRUD operations (2 day)
+
+* **Contributions of individual team members**
+
+1. Leonidas Sallos
+    1. Goals from this week:
+        1. Implement sign-in/up page and login persistence (1 day)
+        2. Make test suite for user authentication (2 day)
+        3. Implement user settings (1 day)
+    2. Progress and Issues:
+        1. What I did: I implemented a working sign-in/up/out system through 
+        Supabase, as well as helped patch some CORS bugs.
+        2. What worked: The email authentication did end up working in the
+        end after the refactor away from the Spotify API.
+        3. What I learned: Our system would work better if we would have
+        a system of a client and Supabase as our whole backend, which I
+        will keep in mind for future projects using React.
+        4. Where I had trouble: Integrating Supabase into our system was
+        quite difficult, and the Spotify integration had to be ditched
+        after finding that the Spotify development API usage allows only 5
+        total accounts, making beta testing very difficult.
+    4. Goals for next week:
+        1. Make test suite for user authentication (2 day)
+        2. Implement CI/CD with GitHub Actions (1 day)
+        3. Assist with test suite for server-side CRUD operations (2 day)
