@@ -8,12 +8,14 @@ const defaultCoords: [number, number] = [44.56699643037226, -123.2737945750708];
 
 interface PostProp {
   latestPost: {
+    feedRefresh: number;
     songName: string;
     artistName: string;
     comment: string;
     position: [number, number];
     timestamp: number;
   } | null;
+    feedRefresh: number;
 }
 
 type FeedPost = {
@@ -54,7 +56,7 @@ function parseLocationPoint(point: string): [number, number] | null {
   return [lat, lng];
 }
 
-function MapView({ latestPost }: PostProp) {
+function MapView({ latestPost, feedRefresh }: PostProp) {
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
 
@@ -89,7 +91,7 @@ function MapView({ latestPost }: PostProp) {
     };
 
     fetchFeed();
-  }, []);
+  }, [feedRefresh]); // re-fetch feed whenever feedRefresh changes
 
  return (
     <div>
