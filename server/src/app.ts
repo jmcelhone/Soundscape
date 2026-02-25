@@ -35,28 +35,25 @@ app.post("/posts", async (req: Request, res: Response) => {
 
         // Latitude/longitude, placeholder
         if (typeof latitude !== "number" || typeof longitude !== "number") {
-            return res.status(400).json({ error: "latitude and longitude must be numbers" })
+            return res.status(400).json({ error: "latitude and longitude must be numbers" });
         }
 
         // Build new post and insert into Supabase
         const newPost = {
             userid: userData.uid,
-            time: new Date().toISOString(),
-            songid: null,
-            location: `(${latitude},${longitude})`,
-            comment: {
-                songTitle,
-                artistName: artistName ?? "",
-                text: comment ?? ""
-            }
+            songtitle: songTitle,
+            artistname: artistName ?? "",
+            latitude,
+            longitude,
+            comment: comment ?? "",
         };
 
         // Insert into Supabase
         const { data, error } = await supabase
-        .from("posts")
-        .insert(newPost)
-        .select()
-        .single();
+            .from("posts")
+            .insert([newPost])
+            .select()
+            .single();
 
         if (error) {
             console.error("Supabase insert error:", error);
@@ -115,11 +112,11 @@ app.get("/feed", async (req: Request, res: Response) => {
 
         // Fetch posts where userid is in friendIDs by newest first
         const { data: posts, error: postsErr } = await supabase
-        .from("posts")
-        .select("postid, userid, time, location, comment")
-        .in("userid", friendsIDs)
-        .order("time", { ascending: false })
-        .limit(20); // optional limit for now
+            .from("posts")
+            .select("postid, userid, songtitle, artistname, latitude, longitude, comment")
+            .in("userid", friendsIDs)
+            .order("time", { ascending: false })
+            .limit(20);
 
         if (postsErr) {
             console.error(postsErr);

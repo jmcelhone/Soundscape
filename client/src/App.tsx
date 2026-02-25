@@ -16,9 +16,11 @@ function App() {
     position: [number, number];
     timestamp: number;
   } | null>(null);
+  const [feedRefresh, setFeedRefresh] = useState(0);
 
   const handleNewPost = (post) => {
     setLatestPost(post);
+    setFeedRefresh((x) => x + 1); // tells MapView to re-fetch /api/feed
   };
   useEffect(() => {
     fetch("https://localhost:8000/")
@@ -31,7 +33,7 @@ function App() {
       </header>
       <h1>Hello World!</h1>
       <h2>{message}</h2>
-      <MapView latestPost={latestPost} />
+      <MapView latestPost={latestPost} feedRefresh={feedRefresh} />
       <MakePost onPostCreated={handleNewPost}/>
       <SignUpForm />
       <LoginForm />
