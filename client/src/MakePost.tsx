@@ -39,28 +39,33 @@ const MakePost = ({ onPostCreated }: PostProp) => {
   }
 };
 
-  const submitPost = async () => {
+const submitPost = async () => {
+    if (!position) throw new Error("Location not ready");
+
     const payload = {
       songTitle: songName,
-      artistName: "",               // optional
-      latitude: 44.565,             // TEMP placeholder
-      longitude: -123.276,          // TEMP placeholder
+      artistName: artistName,
+      latitude: position[0],
+      longitude: position[1],
       comment: comment
+    }
+
     };
 
-    const res = await fetch(location.origin + '/api/posts', {
+    const res = await fetch("https://localhost:8000/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include", // sends auth cookies
       body: JSON.stringify(payload),
-   });
+    });
 
-    if (!res.ok) {
+   if (!res.ok) {
       const text = await res.text();
       throw new Error(text);
     }
 
     return await res.json();
-  };
+   };
 
   //creates a newPost prop, lifts state to App.tsx
   const handleSubmit = async () => {
