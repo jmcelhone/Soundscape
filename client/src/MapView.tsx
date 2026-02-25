@@ -16,6 +16,18 @@ interface PostProp {
   } | null;
 }
 
+type FeedPost = {
+  postid: number;
+  userid: string;
+  time: string;
+  location: string; // e.g. "(44.565,-123.276)"
+  comment: {
+    songTitle?: string;
+    artistName?: string;
+    text?: string;
+  } | null;
+};
+
 function MapUpdater({ position }: { position: [number, number] | null }) {
     const map = useMap();
 
@@ -27,14 +39,58 @@ function MapUpdater({ position }: { position: [number, number] | null }) {
     return null;
 }
 
-function MapView({latestPost}: PostProp) {
-    const [position, setPosition] = useState<[number, number] | null>(null);
+function parseLocationPoint(point: string): [number, number] | null {
+  // point looks like "(44.565,-123.276)"
+  if (!point || typeof point !== "string") return null;
 
-    useEffect(() => {
+  const cleaned = point.replace("(", "").replace(")", "");
+  const parts = cleaned.split(",");
+  if (parts.length !== 2) return null;
+
+  const lat = Number(parts[0]);
+  const lng = Number(parts[1]);
+
+  if (Number.isNaN(lat) || Number.isNaN(lng)) return null;
+  return [lat, lng];
+}
+
+function MapView({ latestPost }: PostProp) {
+  const [position, setPosition] = useState<[number, number] | null>(null);
+  const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
+
+  // Grab user's current location (for centering map)
+  useEffect(() => {
     navigator.geolocation.getCurrentPosition((pos) => {
-        setPosition([pos.coords.latitude, pos.coords.longitude]);
+      setPosition([pos.coords.latitude, pos.coords.longitude]);
     });
-    }, []);
+  }, []);
+
+  // Fetch feed from backend once when component loads
+  useEffect(() => {
+    const fetchFeed = async () => {
+      try {
+        const res = await fetch(location.origin + "/api/feed", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text);
+        }
+
+        const data: FeedPost[] = await res.json();
+        setFeedPosts(data);
+
+        setFeedPosts(data);
+      } catch (err) {
+        console.error("Failed to fetch feed:", err);
+      }
+    };
+
+    fetchFeed();
+  }, []);
+
  return (
     <div>
         <MapContainer center={defaultCoords} zoom={defaultZoom} scrollWheelZoom={true}>
@@ -43,17 +99,38 @@ function MapView({latestPost}: PostProp) {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <MapUpdater position={position} />
-            {latestPost?.position && (
-                <Marker position={latestPost.position}>
-                    <Popup>
-                        {latestPost.songName} - {latestPost.artistName} <br /> {latestPost.comment}
-                    </Popup>
-                </Marker>
-            )}
-        </MapContainer>
-    </div>
 
- )
+        {/* Show posts from feed */}
+        {feedPosts.map((post) => {
+          const coords = parseLocationPoint(post.location);
+          if (!coords) return null;
+
+          return (
+            <Marker key={post.postid} position={coords}>
+              <Popup>
+                <b>{post.comment?.songTitle ?? "Unknown Song"}</b>
+                <br />
+                {post.comment?.artistName ?? ""}
+                <br />
+                {post.comment?.text ?? ""}
+              </Popup>
+            </Marker>
+          );
+        })}
+
+        {/* Optional: also show the latestPost you just created */}
+        {latestPost?.position && (
+          <Marker position={latestPost.position}>
+            <Popup>
+              <b>{latestPost.songName}</b> - {latestPost.artistName}
+              <br />
+              {latestPost.comment}
+            </Popup>
+          </Marker>
+        )}
+      </MapContainer>
+    </div>
+  );
 }
 
 export default MapView;

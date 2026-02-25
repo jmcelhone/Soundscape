@@ -35,7 +35,7 @@ app.post("/posts", async (req: Request, res: Response) => {
 
         // Latitude/longitude, placeholder
         if (typeof latitude !== "number" || typeof longitude !== "number") {
-            return res.status(400).json({ error: "latitude and longitude must be numbers" })
+            return res.status(400).json({ error: "latitude and longitude must be numbers" });
         }
 
         // Build new post and insert into Supabase
@@ -50,11 +50,11 @@ app.post("/posts", async (req: Request, res: Response) => {
 
         // Insert into Supabase
         const { data, error } = await supabase
-            .from("posts"
-            .insert(newPost)
+            .from("posts")
+            .insert([newPost])
             .select()
             .single();
-            )
+
         if (error) {
             console.error("Supabase insert error:", error);
             return res.status(500).send("Database insert failed");
