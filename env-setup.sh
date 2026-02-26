@@ -1,20 +1,11 @@
 #!/bin/bash
 
-# load npm dependencies
-echo "Installing npm packages..."
-npm i
-
-echo "Installing server npm packages..."
-cd server
-npm i
-cd ../
-
-echo "Installing client npm packages..."
-cd client
-npm i
-cd ../
-
-echo
+checkNPMFailure() {
+    if [ $1 -ne 0 ]; then
+        echo "npm failed, aborting..."
+        exit $1
+    fi
+}
 
 getHTTPSPassword() {
     read -sp "Enter HTTPS encryption password: " pass
@@ -29,6 +20,25 @@ generateHTTPSKeyAndCert() {
     cd ../
 }
 
+# load npm dependencies
+echo "Installing npm packages..."
+npm i
+checkNPMFailure $?
+
+echo "Installing server npm packages..."
+cd server
+npm i
+checkNPMFailure $?
+cd ../
+
+echo "Installing client npm packages..."
+cd client
+npm i
+checkNPMFailure $?
+cd ../
+
+echo
+
 # check for environment files
 if [ ! -f "server/.env" ] || [ ! -f "client/.env" ]; then
     echo "Creating new env files..."
@@ -37,6 +47,7 @@ if [ ! -f "server/.env" ] || [ ! -f "client/.env" ]; then
     # set supabase info
     read -p "Enter Supabase public URL: " supabaseUrl
     read -p "Enter Supabase publishable key: " supabaseKey
+    read -p "Enter Supabase test auth token: " supabaseTestToken
 
     # create HTTPS keys
     pass=$(getHTTPSPassword)
@@ -50,6 +61,7 @@ if [ ! -f "server/.env" ] || [ ! -f "client/.env" ]; then
     echo "HTTPS_KEY_PASSPHRASE=$pass" >> server/.env
     echo "NEXT_PUBLIC_SUPABASE_URL=$supabaseUrl" >> server/.env
     echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=$supabaseKey" >> server/.env
+    echo "SUPABASE_TEST_AUTH_TOKEN=$supabaseTestToken" >> server/.env
     
     # write client env file
     touch client/.env
