@@ -3,4 +3,5 @@ client/node_modules
 server/node_modules
 .env
 *.pem
+client/coverage
 server/coverage
