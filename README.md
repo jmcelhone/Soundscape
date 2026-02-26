@@ -8,9 +8,11 @@ soundscape/
 ├── client/
 │   ├── public/
 │   └── src/
+│       ├── hooks/
 │       └── assets/
 ├── server/
 │   ├── sql/
+│   ├── test/
 │   └── src/
 ├── package.json
 ├── package-lock.json
