@@ -6,8 +6,10 @@ import SignUpForm from "./SignUpForm.tsx";
 import LoginForm from "./LoginForm.tsx";
 import LogoutButton from "./LogoutButton.tsx";
 import MapView from './MapView.tsx';
+import { AuthProvider, useAuth } from './AuthContext.tsx';
 
-function App() {
+function AppContent() {
+  const session = useAuth();
   const [message, setMessage] = useState("");
   const [latestPost, setLatestPost] = useState<{
     songName: string;
@@ -22,24 +24,40 @@ function App() {
     setLatestPost(post);
     setFeedRefresh((x) => x + 1); // tells MapView to re-fetch /api/feed
   };
+
   useEffect(() => {
     fetch("https://localhost:8000/")
       .then((res) => res.text())
       .then((text) => setMessage(text));
   }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-      </header>
-      <h1>Hello World!</h1>
+      <header className="App-header"></header>
+      <h1>Soundscape</h1>
       <h2>{message}</h2>
-      <MapView latestPost={latestPost} feedRefresh={feedRefresh} />
-      <MakePost onPostCreated={handleNewPost}/>
-      <SignUpForm />
-      <LoginForm />
-      <LogoutButton />
+	  {session ? (
+	  	<>
+			<MapView latestPost={latestPost} feedRefresh={feedRefresh} />
+			<MakePost onPostCreate={handleNewPost} />
+			<LogoutButton />
+		</>
+	  ) : (
+	  		<>
+				<LoginForm />
+				<SignUpForm />
+			</>
+		)}
     </div>
   );
+}
+
+function App() {
+	return (
+		<AuthProvider>
+			<AppContent />
+		</AuthProvider>
+	);
 }
 
 export default App;

@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: red;
 }
 
 .post-button {
@@ -17,7 +18,8 @@
 .modal-box {
   width: 690px;
   max-width: none;
-  background-color: white;
+  background-color: Darkgrey;
+  color: black;
   border-radius: 0.5rem;
   padding: 1.5rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -64,4 +66,14 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
+}
+
+dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  padding: 0;
+  z-index: 1000;
 }

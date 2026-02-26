@@ -4,8 +4,10 @@ import { useState } from 'react';
 export default function SignUpForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
         handleSignup(email, password);
     }
 
@@ -19,11 +21,13 @@ export default function SignUpForm() {
             }
         });
 
-        if (error) console.error(error);
+        if (error) setError(error.message);
+		else setError('');
     }
 
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
+			{error && <p>{error}</p>}
             <input
                 type="email"
                 value={email}
@@ -36,7 +40,7 @@ export default function SignUpForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
             />
-            <button type="submit" onClick={handleSubmit}>
+            <button type="submit" >
                 Sign Up
             </button>
         </form>
