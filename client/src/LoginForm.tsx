@@ -4,8 +4,9 @@ import { useState } from 'react';
 export default function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: ReactFormEvent) => {
         e.preventDefault();
         handleSignIn(email, password);
     }
@@ -17,11 +18,13 @@ export default function LoginForm() {
             password: password,
         });
 
-        if (error) console.error(error, data);
+        if (error) setError(error.message);
+		else setError('');
     }
 
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
+			{error && <p>{error}</p>}
             <input
                 type="email"
                 value={email}

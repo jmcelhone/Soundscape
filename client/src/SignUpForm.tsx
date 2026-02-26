@@ -4,6 +4,7 @@ import { useState } from 'react';
 export default function SignUpForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -20,11 +21,13 @@ export default function SignUpForm() {
             }
         });
 
-        if (error) console.error(error);
+        if (error) setError(error.message);
+		else setError('');
     }
 
     return (
         <form onSubmit={handleSubmit}>
+			{error && <p>{error}</p>}
             <input
                 type="email"
                 value={email}
