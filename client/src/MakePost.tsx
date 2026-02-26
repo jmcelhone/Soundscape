@@ -13,6 +13,7 @@ interface PostProp {
 const MakePost = ({ onPostCreated }: PostProp) => {
   //waiting for user auth to get userId
   //const [userId, setUserId] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(false);
   const [songName, setSongName] = useState("");
   const [artistName, setArtistName] = useState("");
   const [comment, setComment] = useState("");
@@ -25,19 +26,6 @@ const MakePost = ({ onPostCreated }: PostProp) => {
         });
     }, []);
 
-  const openModal = () => {
-    const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
-    if (modal) {
-      modal.showModal();
-    }
-  };
-
-  const closeModal = () => {
-  const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
-  if (modal) {
-    modal.close();
-  }
-};
 
 const submitPost = async () => {
   if (!position) throw new Error("Location not ready");
@@ -92,7 +80,7 @@ const submitPost = async () => {
     }
 
     //close modal with successful transfer of prop
-    closeModal();
+	setIsOpen(false);
     setSongName("");
     setArtistName("");
     setComment("");
@@ -101,65 +89,62 @@ const submitPost = async () => {
   return (
     <>
       <div className="post-container">
-        <button className="post-button" onClick={openModal}>
+        <button className="post-button" onClick={() => setIsOpen(true)}>
           Create a Music Moment
         </button>
       </div>
 
-      <dialog id="my_modal_1" className="modal">
-        <div className="modal-box">
-          <h3>Creating Music Moment</h3>
-
-          <form>
-            <div className="form-section">
-              <label className="section-label">Song Name</label>
-              <input
-                type="text"
-                placeholder="Type here"
-                className="form-input"
-                value={songName}
-                onChange={(e) => setSongName(e.target.value)}
-                required
-              />
+        {isOpen && (
+        <dialog open className="modal">
+          <div className="modal-box">
+            <h3>Creating Music Moment</h3>
+            <form>
+              <div className="form-section">
+                <label className="section-label">Song Name</label>
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  className="form-input"
+                  value={songName}
+                  onChange={(e) => setSongName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-section">
+                <label className="section-label">Artist Name</label>
+                <input
+                  placeholder="Type here"
+                  className="form-input"
+                  value={artistName}
+                  onChange={(e) => setArtistName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-section">
+                <label className="section-label">Add a comment</label>
+                <input
+                  placeholder="Type here"
+                  className="form-input"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  required
+                />
+              </div>
+            </form>
+            <div className="modal-actions">
+              <button className="btn" onClick={() => setIsOpen(false)}>
+                Close
+              </button>
+              <button className="btn" onClick={handleSubmit}>
+                Add
+              </button>
             </div>
-
-            <div className="form-section">
-              <label className="section-label">Artist Name</label>
-              <input
-                placeholder="Type here"
-                className="form-input"
-                value={artistName}
-                onChange={(e) => setArtistName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="form-section">
-              <label className="section-label">Add a comment</label>
-              <input
-                placeholder="Type here"
-                className="form-input"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                required
-              />
-            </div>
-          </form>
-          <div className="modal-actions">
-            <button className="btn" onClick={closeModal}>
-              Close
-            </button>
-            <button
-              className="btn"
-              onClick= {handleSubmit}
-            >
-              Add
-            </button>
           </div>
-        </div>
-      </dialog>
+        </dialog>
+      )}
     </>
   );
 };
+
 
 export default MakePost;
