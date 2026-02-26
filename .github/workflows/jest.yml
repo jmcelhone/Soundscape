@@ -30,8 +30,8 @@ jobs:
         
     - name: Create https keys
       run: |
-        echo "${{ secrets.testKey }}" > key.pem
-        echo "${{ secrets.testCert }}" > cert.pem
+        echo "${{ secrets.TEST_KEY }}" > key.pem
+        echo "${{ secrets.TEST_CERT }}" > cert.pem
     
     - name: Install server dependencies
       run: npm i
