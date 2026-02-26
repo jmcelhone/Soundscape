@@ -1,26 +1,19 @@
 import { createClient } from './supabase.ts';
 import { useState } from 'react';
 
-export default function LoginForm() {
+interface LoginFormProps {
+  onSubmit: (email: string, password: string) => Promise<void>;
+  isLoading?: boolean;
+}
+export default function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 
-    const handleSubmit = (e: ReactFormEvent) => {
+    const handleSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();
-        handleSignIn(email, password);
-    }
-
-    const handleSignIn = async (email: string, password: string) => {
-        const supabase = createClient();
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
-
-        if (error) setError(error.message);
-		else setError('');
-    }
+        await onSubmit(email, password);
+    };
 
     return (
         <form>
