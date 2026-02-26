@@ -3,10 +3,10 @@ import { createServerClient, parseCookieHeader, serializeCookieHeader } from '@s
 import { type Database } from './supabase.ts';
 import { type Request, type Response } from 'express';
 
-const supabaseURL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!;
-
 export function createClient(req: Request, res: Response) {
+    const supabaseURL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!;
+
     return createServerClient(
         supabaseURL,
         supabaseKey,
@@ -43,7 +43,6 @@ export async function authenticate(supabase):
     const { data, error } = await supabase.auth.getClaims();
     
     if (!data || error) {
-        console.error(error);
         return new Promise((resolve) => { resolve(null); });
     }
 
@@ -60,11 +59,4 @@ export async function authenticate(supabase):
     }
 
     return new Promise((resolve) => { resolve(null); });
-}
-
-export function createBasicClient() {
-    return createBClient<Database>(
-        supabaseURL,
-        supabaseKey
-    );
 }
