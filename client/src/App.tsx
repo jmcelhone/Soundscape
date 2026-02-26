@@ -6,7 +6,11 @@ import SignUpForm from "./SignUpForm.tsx";
 import LoginForm from "./LoginForm.tsx";
 import LogoutButton from "./LogoutButton.tsx";
 import MapView from './MapView.tsx';
+<<<<<<< HEAD
 import { AuthProvider, useAuth } from './AuthContext.tsx';
+=======
+import Login from './Login.tsx';
+>>>>>>> 2d6b694 (login wrapper component and styling)
 
 function AppContent() {
   const session = useAuth();
