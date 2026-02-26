@@ -5,8 +5,7 @@ export default function SignUpForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
+    const handleSubmit = () => {
         handleSignup(email, password);
     }
 
@@ -24,7 +23,7 @@ export default function SignUpForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form>
             <input
                 type="email"
                 value={email}
@@ -37,7 +36,7 @@ export default function SignUpForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
             />
-            <button type="submit">
+            <button type="submit" onClick={handleSubmit}>
                 Sign Up
             </button>
         </form>
