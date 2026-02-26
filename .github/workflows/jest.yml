@@ -16,25 +16,28 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '25'
-
-    - name: Start server tests
-      run: cd server
-    
-    - name: Create env file
-      run: |
-        echo "PORT=8000" >> .env
-        echo "HTTPS_KEY_PASSPHRASE=${{ secrets.HTTPS_KEY_PASSPHRASE }}" >> .env
-        echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env
-        echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> .env
-        echo "SUPABASE_TEST_AUTH_TOKEN=${{ secrets.SUPABASE_TEST_AUTH_TOKEN }}" >> .env
         
-    - name: Create https keys
+    - name: Install dependencies
       run: |
-        echo "${{ secrets.TEST_KEY }}" > key.pem
-        echo "${{ secrets.TEST_CERT }}" > cert.pem
+        npm i
+        cd server
+        npm i
     
-    - name: Install server dependencies
-      run: npm i
+    - name: Create server env file
+      run: |
+        echo "PORT=8000" >> server/.env
+        echo "HTTPS_KEY_PASSPHRASE=${{ secrets.HTTPS_KEY_PASSPHRASE }}" >> server/.env
+        echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> server/.env
+        echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> server/.env
+        echo "SUPABASE_TEST_AUTH_TOKEN=${{ secrets.SUPABASE_TEST_AUTH_TOKEN }}" >> server/.env
+        
+    - name: Create server https keys
+      run: |
+        echo "${{ secrets.TEST_KEY }}" > server/key.pem
+        echo "${{ secrets.TEST_CERT }}" > server/cert.pem
+
 
     - name: Run server tests
-      run: npm run test
+      run: |
+        cd server
+        npm run test

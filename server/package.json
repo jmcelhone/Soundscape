@@ -16,7 +16,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node --env-file .env src/server.ts",
-    "dev": "nodemon -e .ts --env-file .env src/server.ts"
+    "dev": "nodemon -e .ts --env-file .env src/server.ts",
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest --setupFiles dotenv/config --coverage"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
@@ -26,12 +27,12 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/express": "^5.0.6",
-    "@types/jest": "^30.0.0",
     "@types/node": "^25.0.10",
     "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
     "cors": "^2.8.6",
     "cypress": "^15.10.0",
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "nodemon": "^3.1.11",
     "react": "^19.2.3",
@@ -39,6 +40,10 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.19"
+    "@jest-mock/express": "^3.0.0",
+    "@jest/globals": "^30.2.0",
+    "@types/cors": "^2.8.19",
+    "@types/jest": "^30.0.0",
+    "ts-jest": "^29.4.6"
   }
 }
