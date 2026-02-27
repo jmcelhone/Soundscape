@@ -11,6 +11,7 @@ import Login from './Login.tsx';
 
 function AppContent() {
   const session = useAuth();
+  const userId = session?.user.id;
   const [message, setMessage] = useState("");
   const [latestPost, setLatestPost] = useState<{
     songName: string;
@@ -40,7 +41,7 @@ function AppContent() {
 	  {session ? (
 	  	<>
 			<MapView latestPost={latestPost} feedRefresh={feedRefresh} />
-			<MakePost onPostCreated={handleNewPost} />
+			<MakePost onPostCreated={handleNewPost} userIdStr={userId}/>
 			<LogoutButton />
 		</>
 	  ) : (
