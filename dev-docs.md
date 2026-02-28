@@ -4,14 +4,20 @@ Fork this repository (https://github.com/jmcelhone/Soundscape)
 
 ## Directory Structure
 ```
-├── client
-│   ├── public
-│   └── src
-│       ├── assets
-│       └── hooks
-└── server
-    ├── sql
-    └── src
+soundscape/
+├── client/
+│   ├── public/
+│   └── src/
+│       ├── hooks/
+│       └── assets/
+├── server/
+│   ├── sql/
+│   ├── test/
+│   └── src/
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+└── README.md
 ```
 Our repo is seperated into client and server folders. In the root folder we have our documentation and our Node project configuration. In the client, public contains any static pages and assets and src contains assests used within React as well as React hooks and components. In server, we have a src directory for source code for our Express server and a sql directory for our schema.
 The layout of your directory structure. What do the various directories (folders) contain, and where to find source files, tests, documentation, data files, etc.
