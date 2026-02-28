@@ -31,7 +31,6 @@ jobs:
         echo "HTTPS_KEY_PASSPHRASE=${{ secrets.HTTPS_KEY_PASSPHRASE }}" >> server/.env
         echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> server/.env
         echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> server/.env
-        echo "SUPABASE_TEST_AUTH_TOKEN=${{ secrets.SUPABASE_TEST_AUTH_TOKEN }}" >> server/.env
         
     - name: Create server https keys
       run: |
