@@ -7,8 +7,9 @@ import cors from "cors";
 const app = express()
 
 // middleware
+const corsOrigin = process.env.NODE_ENV === 'production' ? process.env.CLIENT_ORIGIN! : "*";
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: corsOrigin,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));

@@ -38,7 +38,7 @@ const submitPost = async () => {
     comment: comment,
   };
 
-  const res = await fetch("http://localhost:8000/posts", {
+  const res = await fetch(window.location.origin + "/api/posts", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include", // sends auth cookies
