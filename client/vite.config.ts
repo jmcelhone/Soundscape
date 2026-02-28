@@ -1,7 +1,14 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import tsconfigPaths from 'vite-tsconfig-paths';
+import { resolve } from 'path';
+
+const env = loadEnv("", process.cwd(), "VITE_");
 
 export default defineConfig({
+    define: {
+        'process.env': env,
+    },
 	resolve: {
 		dedupe: ['react', 'react-dom'],
 	},
@@ -15,7 +22,17 @@ export default defineConfig({
             },
         },
     },
-    plugins: [react()],
+    plugins: [react(), tsconfigPaths()],
+    base: './',
+    build: {
+        lib: {
+            entry: resolve(__dirname, "src/main.tsx"),
+            formats: ["es"],
+        },
+        rollupOptions: {
+            input: 'index.html',
+        },
+    },
     test: {
 		globals: true,
         environment: 'jsdom',
