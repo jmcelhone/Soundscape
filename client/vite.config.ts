@@ -4,6 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { resolve } from 'path';
 
 const env = loadEnv("", process.cwd(), "VITE_");
+if (process.env.NODE_ENV) env.NODE_ENV = process.env.NODE_ENV;
 
 export default defineConfig({
     define: {

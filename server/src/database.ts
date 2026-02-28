@@ -17,6 +17,13 @@ export function createClient(req: Request, res: Response) {
                 persistSession: true,
                 detectSessionInUrl: true,
             },
+            cookieOptions: {
+                domain: process.env.COOKIE_HOST_URL!,
+                path: '/',
+                sameSite: 'lax',
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 60 * 60 * 24 * 30, // 30 days
+            },
             cookies: {
                 getAll() {
                     return parseCookieHeader(req.headers.cookie ?? '');
