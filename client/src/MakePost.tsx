@@ -9,10 +9,10 @@ interface PostProp {
     position: [number, number];
     timestamp: number;
   }) => void;
+  userIdStr: string;
 }
-const MakePost = ({ onPostCreated }: PostProp) => {
-  //waiting for user auth to get userId
-  //const [userId, setUserId] = useState<string>("");
+const MakePost = ({ onPostCreated, userIdStr}: PostProp) => {
+  const [userId, setUserId] = useState<string>(userIdStr);
   const [isOpen, setIsOpen] = useState(false);
   const [songName, setSongName] = useState("");
   const [artistName, setArtistName] = useState("");
@@ -65,7 +65,7 @@ const submitPost = async () => {
       };
 
       onPostCreated(newPost);
-
+      
     } else {
       alert("Please wait for location to load or enable location");
       return;

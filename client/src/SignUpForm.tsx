@@ -1,46 +1,40 @@
 import { createClient } from './supabase.ts';
 import { useState } from 'react';
 
-export default function SignUpForm() {
+interface SignUpProps {
+  onSubmit: (email: string, password: string) => Promise<void>;
+  isLoading?: boolean;
+}
+export default function SignUpForm({ onSubmit, isLoading = false }: SignUpProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-        handleSignup(email, password);
-    }
+    const handleSubmit = async (e: React.SubmitEvent) => {
+        e.preventDefault();
+        await onSubmit(email, password);
+    };
 
-    const handleSignup = async (email: string, password: string) => {
-        const supabase = createClient();
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                emailRedirectTo: "http://localhost:5173/"
-            }
-        });
-
-        if (error) setError(error.message);
-		else setError('');
-    }
 
     return (
-        <form onSubmit={handleSubmit}>
-			{error && <p>{error}</p>}
-            <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter email"
-            />
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-            />
-            <button type="submit" >
+        <form>
+            <div>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter email"
+                />
+            </div>
+            <div>
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter password"
+                />
+            </div>
+            <button type="submit" onClick={handleSubmit}>
                 Sign Up
             </button>
         </form>
