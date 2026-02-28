@@ -7,7 +7,7 @@ import cors from "cors";
 const app = express()
 
 // middleware
-const corsOrigin = process.env.NODE_ENV === 'production' ? "https://*" + process.env.COOKIE_HOST_URL! : "*";
+const corsOrigin = process.env.NODE_ENV === 'production' ? process.env.CLIENT_ORIGIN! : "*";
 app.use(cors({
     origin: corsOrigin,
     credentials: true,
