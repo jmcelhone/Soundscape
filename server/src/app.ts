@@ -7,7 +7,12 @@ import cors from "cors";
 const app = express()
 
 // middleware
-app.use(cors());
+const corsOrigin = process.env.NODE_ENV === 'production' ? "https://*" + process.env.COOKIE_HOST_URL! : "*";
+app.use(cors({
+    origin: corsOrigin,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));
 app.use(express.json())
 
 app.post("/posts", async (req: Request, res: Response) => {
