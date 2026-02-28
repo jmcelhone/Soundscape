@@ -17,7 +17,7 @@ export default function SignUpForm() {
             email: email,
             password: password,
             options: {
-                emailRedirectTo: "http://localhost:5173/"
+                emailRedirectTo: window.location.origin
             }
         });
 

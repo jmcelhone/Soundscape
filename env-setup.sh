@@ -66,6 +66,7 @@ if [ ! -f "server/.env" ] || [ ! -f "client/.env" ]; then
     echo "# .env" >> client/.env
     echo "VITE_PUBLIC_SUPABASE_URL=$supabaseUrl" >> client/.env
     echo "VITE_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=$supabaseKey" >> client/.env
+    echo "VITE_SERVER_URL=https://localhost:8000" >> client/.env
     # check HTTPS certifications 
 elif [ ! -f "server/cert.pem" ] || [ ! -f "server/key.pem" ]; then
     echo "Creating new HTTPS key/cert..."

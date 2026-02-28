@@ -17,6 +17,12 @@ jobs:
       with:
         node-version: '25'
 
+    - name: Create client env file
+      run: |
+        echo "VITE_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> client/.env
+        echo "VITE_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> client/.env
+        echo "VITE_SERVER_URL=https://placeholder.url" >> client/.env
+
     - name: Build vite page
       run: |
         cd client
@@ -57,6 +63,7 @@ jobs:
       run: |
         echo "VITE_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> client/.env
         echo "VITE_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> client/.env
+        echo "VITE_SERVER_URL=https://placeholder.url" >> client/.env
 
     - name: Run server tests
       run: |

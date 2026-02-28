@@ -26,7 +26,7 @@ function AppContent() {
   };
 
   useEffect(() => {
-    fetch("https://localhost:8000/")
+    fetch(window.location.origin + "/api")
       .then((res) => res.text())
       .then((text) => setMessage(text));
   }, []);
