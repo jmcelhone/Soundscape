@@ -1,5 +1,6 @@
 import { createClient } from './supabase.ts';
 import { useState } from 'react';
+import './style/LogoutButton.css';
 
 export default function LogoutButton() {
     const [error, setError] = useState('');
@@ -12,9 +13,9 @@ export default function LogoutButton() {
     }
 
     return (
-        <div>
-            {error && <p>{error}</p>}
-            <button onClick={logout}>Logout</button>
-        </div>
+		<div className="logout-button-wrapper">
+			{error && <p>{error}</p>}
+			<button onClick={logout}>Logout</button>
+		</div>
     );
 }

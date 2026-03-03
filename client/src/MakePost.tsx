@@ -132,10 +132,10 @@ const submitPost = async () => {
               </div>
             </form>
             <div className="modal-actions">
-              <button className="btn" onClick={() => setIsOpen(false)}>
+              <button className="btn btn-close" onClick={() => setIsOpen(false)}>
                 Close
               </button>
-              <button className="btn" onClick={handleSubmit}>
+              <button className="btn btn-add" onClick={handleSubmit}>
                 Add
               </button>
             </div>
