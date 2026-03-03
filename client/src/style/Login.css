@@ -50,9 +50,24 @@
 
 .signin-header {
   color: #3d3d55;
+  margin-top: 0;
 }
 
 .login-button {
     background-color: #f3f3f3;
     color: #3d3d55;
+  }
+
+input, textarea, select {
+    background-color: #f0f0f0; 
+    color: #333333;
+    border: 1px solid #cccccc; 
+  }
+
+input {
+  width: 70%;
+}
+
+form > button {
+  margin-top: 15px;
   }
