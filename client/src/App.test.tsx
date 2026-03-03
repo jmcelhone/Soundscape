@@ -51,3 +51,4 @@ describe('App', () => {
       expect(screen.getByText('Logout')).toBeInTheDocument();
     });
   });
+});
