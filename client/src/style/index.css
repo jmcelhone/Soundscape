@@ -26,6 +26,7 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
+  align-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -38,6 +39,7 @@ h1 {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
+  margin-top: 10px;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
@@ -56,13 +58,38 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: #3d3d55;
     background-color: #ffffff;
   }
   a:hover {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #f3f3f3;
+  }
+
+  input, textarea, select {
+    background-color: #f0f0f0; 
+    color: #3d3d55;
+    border: 1px solid #cccccc; 
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #ffffff;
+    background-color: #242c33;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #182026;
+  }
+
+  input, textarea, select {
+    background-color: #f0f0f0; 
+    color: #333333;
+    border: 1px solid #cccccc; 
   }
 }

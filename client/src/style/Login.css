@@ -4,7 +4,7 @@
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
 }
 
 .error-message {
@@ -47,3 +47,12 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.signin-header {
+  color: #3d3d55;
+}
+
+.login-button {
+    background-color: #f3f3f3;
+    color: #3d3d55;
+  }

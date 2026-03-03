@@ -34,7 +34,7 @@ export default function SignUpForm({ onSubmit, isLoading = false }: SignUpProps)
                     placeholder="Enter password"
                 />
             </div>
-            <button type="submit" onClick={handleSubmit}>
+            <button className='login-button' type="submit" onClick={handleSubmit}>
                 Sign Up
             </button>
         </form>

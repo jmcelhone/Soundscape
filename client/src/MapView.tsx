@@ -5,7 +5,7 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png?url";
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import './MapView.css';
+import './style/MapView.css';
 
 const defaultZoom = 20;
 const defaultCoords: [number, number] = [44.56699643037226, -123.2737945750708];
