@@ -58,8 +58,8 @@ export async function authenticate(supabase):
         if (!metadata) return new Promise((resolve) => { resolve(null); });
         return new Promise((resolve) => {
             resolve({
-                uid: metadata.sub,
-                email: metadata.email,
+                uid: data.claims.sub,
+                email: data.claims.email,
                 email_verified: metadata.email_verified
             });
         });
