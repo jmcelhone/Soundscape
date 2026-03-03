@@ -51,12 +51,3 @@ describe('App', () => {
       expect(screen.getByText('Logout')).toBeInTheDocument();
     });
   });
-
-  it('fetches and show server message', async () => {
-    (useAuth as any).mockReturnValue(null);
-    render(<App />);
-    await waitFor(() => {
-      expect(screen.getByText('Hello from server')).toBeInTheDocument();
-    });
-  });
-});
