@@ -1,23 +1,47 @@
 # User Manual
 
-## What is Soundscape?
-Soundscape is a music-sharing social platform that allows users to post what they are listening to along with the associated location and optional comment. Soundscape creates a map-based feed of music sharing personal moments. This enables users to discover music through friend's real world experiences. 
+Guide to use, run, and deploy Soundscape.
+
+# Using Soundscape
+
+## Access Deployed Site
+
+1. Access [soundscape.work](https://soundscape.work) on a browser/computer with
+geolocation.
+    - Mobile compatibility is limited.
+2. Allow location services access for Soundscape
 
 ## System Requirements
 
 To use Soundscape, you need:
-- A modern web browser (Chrome, Firefox, Safari, or Edge)
+- A compatible web browser (see below)
 - Location services enabled on your device
 - An internet connection
 
-## How to Use
-### Creating an Account (Work in Progress)
+### Browser Compatibility
 
-1. Visit website **(Work in Progress - deployment pending)**
+Confirmed Working:
+- Safari
+- Firefox
+    - base
+    - Zen
+- Google Chrome
+
+Confirmed not Working:
+- OperaGX
+
+## How to Use
+### Creating an Account
+
+1. Visit website
 2. Click "Sign Up"
 3. Enter your email address
 4. Check your email for a verification link
+    - Sign up email is not through verified SMTP service, and may appear in your
+    spam folder
 5. Click the verification link to activate your account
+    - Account sign-up email must be accepted on the same device/browser as the
+    sign-up was submitted
 6. Log in with your email and password
 
 ### Exploring Posts **(Work in Progress)**
@@ -55,3 +79,46 @@ If something isn't working correctly:
    - What actually happened
    - Your browser and operating system
    - Screenshots if possible
+
+# Deploy Locally
+
+### Required Programs/Services
+
+- Node.js v25
+- npm
+- Supabase (using schema in `server/sql`)
+- OpenSSL (for generating HTTPS key/certification)
+- Bash (for running environment setup script)
+- Any of the following operating systems:
+    - MacOS
+    - Linux
+    - Windows (with Git Bash or WSL)
+
+## Set-up Environment
+
+A Supabase project with the following is required:
+- Database schema with the one used in `server/sql/schema.sql`
+- With user password sign-ups and email verification enabled
+- Gather publishable key in Project Settings -> API keys
+- Gather public URL: `https://[project_id].supabase.co`
+
+Run `npm run dev` which will start the `env-setup.sh` script. The script will
+prompt for certain environment variables, which most can be found on Supabase.
+The setup script can be run at any time independently with `./env-setup.sh`.
+
+If there is an error in the setup of your environment, delete your environment
+files and run `./env-setup.sh` again to rebuild your environment.
+
+While running, Vite will give a URL to access the site. The server will
+run on Port 8000 by default, but this can be changed in the `server/.env` file.
+
+## Build for Production
+
+In the `client` directory, run `npm run build` which will build a static webpage
+in `client/dist`. Run `npm run preview` to view the compiled webpage through Vite.
+
+In the `server` directory, run `npm start` which will start the node server.
+
+The environment setup script will not be run, and the environment file may not be
+setup correctly. `npm install` should be run on each deployment from both the
+`client` and `server` directories.
