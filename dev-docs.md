@@ -8,11 +8,12 @@ Clone or fork this repository (https://github.com/jmcelhone/Soundscape)
 | Layer | Technology |
 | - | - |
 | Frontend | React |
-| Frontend Map | Leaflet |
+| Frontend Map API | Leaflet |
 | Frontend Build System | Vite |
-| Frontend Testing | Vitest |
+| Frontend Testing Library | Vitest |
 | Backend | Node.js, Express |
-| Backend Testing | Jest |
+| Backend Build System | npm |
+| Backend Testing Library | Jest |
 | Database | Supabase |
 
 # Directory Structure

@@ -57,4 +57,5 @@ Confirmed not Working
 # Documentation
 
 [User Manual](User-Manual.md): Guide to installing and running the software locally
+
 [Developer Docs](dev-docs.md): Guide to develop in and test the software
