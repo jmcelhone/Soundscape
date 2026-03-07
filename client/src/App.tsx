@@ -41,7 +41,7 @@ function AppContent() {
 	  {session ? (
 	  	<>
 			<MapView latestPost={latestPost} feedRefresh={feedRefresh} />
-			<MakePost onPostCreated={handleNewPost} userIdStr={userId}/>
+			<MakePost onPostCreated={handleNewPost} />
 			<LogoutButton />
 		</>
 	  ) : (

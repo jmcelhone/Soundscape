@@ -19,7 +19,6 @@ L.Icon.Default.mergeOptions({
 
 interface PostProp {
   latestPost: {
-    feedRefresh: number;
     songName: string;
     artistName: string;
     comment: string;
@@ -33,7 +32,7 @@ type FeedPost = {
   postid: number;
   userid: string;
   time: string;
-  location: string; // e.g. "(44.565,-123.276)"
+  location: string;
   comment: {
     songTitle?: string;
     artistName?: string;
@@ -93,9 +92,9 @@ function MapView({ latestPost, feedRefresh }: PostProp) {
         }
 
         const data: FeedPost[] = await res.json();
+        console.log("Feed data from backend:", data);
         setFeedPosts(data);
 
-        setFeedPosts(data);
       } catch (err) {
         console.error("Failed to fetch feed:", err);
       }

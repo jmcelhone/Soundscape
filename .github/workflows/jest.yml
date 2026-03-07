@@ -9,68 +9,70 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Build client static page
-      uses: actions/setup-node@v4
-      with:
-        node-version: '25'
+      - uses: actions/checkout@v4
 
-    - name: Create client env file
-      run: |
-        echo "VITE_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> client/.env
-        echo "VITE_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> client/.env
-        echo "VITE_SERVER_URL=https://placeholder.url" >> client/.env
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-    - name: Build vite page
-      run: |
-        cd client
-        npm i
-        npm run build
+      - name: Create client env file
+        run: |
+          echo "VITE_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> client/.env
+          echo "VITE_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> client/.env
+          echo "VITE_SERVER_URL=https://placeholder.url" >> client/.env
+
+      - name: Build vite page
+        run: |
+          cd client
+          npm install
+          npm run build
 
   test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '25'
-        
-    - name: Install dependencies
-      run: |
-        npm i
-        cd server
-        npm i
-        cd ../client
-        npm i
-    
-    - name: Create server env file
-      run: |
-        echo "PORT=8000" >> server/.env
-        echo "HTTPS_KEY_PASSPHRASE=${{ secrets.HTTPS_KEY_PASSPHRASE }}" >> server/.env
-        echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> server/.env
-        echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> server/.env
-        
-    - name: Create server https keys
-      run: |
-        echo "${{ secrets.TEST_KEY }}" > server/key.pem
-        echo "${{ secrets.TEST_CERT }}" > server/cert.pem
+      - uses: actions/checkout@v4
 
-    - name: Create client env file
-      run: |
-        echo "VITE_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> client/.env
-        echo "VITE_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> client/.env
-        echo "VITE_SERVER_URL=https://placeholder.url" >> client/.env
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-    - name: Run server tests
-      run: |
-        cd server
-        npm run test
+      - name: Install dependencies
+        run: |
+          npm install
+          cd server
+          npm install
+          cd ../client
+          npm install
 
-    - name: Run client tests
-      run: |
-        cd client
-        npm run test
+      - name: Create server env file
+        run: |
+          echo "PORT=8000" >> server/.env
+          echo "HTTPS_KEY_PASSPHRASE=${{ secrets.HTTPS_KEY_PASSPHRASE }}" >> server/.env
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> server/.env
+          echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> server/.env
+
+      - name: Create server https keys
+        run: |
+          echo "${{ secrets.TEST_KEY }}" > server/key.pem
+          echo "${{ secrets.TEST_CERT }}" > server/cert.pem
+
+      - name: Create client env file
+        run: |
+          echo "VITE_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> client/.env
+          echo "VITE_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> client/.env
+          echo "VITE_SERVER_URL=https://placeholder.url" >> client/.env
+
+      - name: Run server tests
+        run: |
+          cd server
+          npm test
+
+      - name: Run client tests
+        run: |
+          cd client
+          npm test

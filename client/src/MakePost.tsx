@@ -9,10 +9,8 @@ interface PostProp {
     position: [number, number];
     timestamp: number;
   }) => void;
-  userIdStr: string;
 }
 const MakePost = ({ onPostCreated, userIdStr}: PostProp) => {
-  const [userId, setUserId] = useState<string>(userIdStr);
   const [isOpen, setIsOpen] = useState(false);
   const [songName, setSongName] = useState("");
   const [artistName, setArtistName] = useState("");
