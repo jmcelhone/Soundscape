@@ -45,7 +45,6 @@ Soundscape will allow customers interested in music to share their experiences i
 **Preconditions:**
 - User is logged in
 - User can create post
-- Spotify is linked to account or ability to manually song search
 
 **Postconditions:**
 - New post is created and stored in database
@@ -55,7 +54,7 @@ Soundscape will allow customers interested in music to share their experiences i
 **Success Scenario Steps:**
 1. User clicks "Create Post"
 2. System prompts user to select song
-3. User manual searches or selects song from Spotify
+3. User manual searches
 4. System requests location input
 5. Location selected through GPS or manual input
 6. User has option to add comment
@@ -69,38 +68,12 @@ Soundscape will allow customers interested in music to share their experiences i
 14. Selecting "Delete" allows user to delete post from system
 
 **Extensions/Variations:**
-- If GPS unavailable, allows manual pin drop
-- If Spotify not linked, allows manual song entry
 - If no comment written, stores with empty comment field
 
 **Exceptions:**
 - If no song is selected → Error displays requiring submission
 - If no location selected → Error displays requiring submission
 - Database write failure → Error displays and post is not created
-
-### UC-2: Friend System (Add/Remove)
-
-**Actors:** Users of Soundscape
-
-**Triggers:** Navigating to Add a Friend page from navigation bar, entering a friends username, and selecting add friend
-
-**Preconditions:** User logged in and is on the friend page
-
-**Postconditions:** User is friends with another user and can see their most recent song post on their map
-
-**Success Scenario Steps:**
-1. User clicks Add a Friend
-2. User is prompted to enter friends username
-3. User selects clicks Add Friend
-4. System stores this new relationship in the database
-5. User clicks back to map page
-6. If their friend has made a post, it will display on their map
-
-**Extensions/Variations:**
-- If user is logged in through Spotify, allow users to add friends from their Spotify friends if available
-
-**Exceptions:**
-- If entered username is invalid, user will be alerted and no information is written to the database
 
 ### UC-3: View Posts on Map (Location Services)
 
@@ -128,30 +101,6 @@ Soundscape will allow customers interested in music to share their experiences i
 **Exceptions:**
 - If location permissions denied, error displays prompting user to enable location services
 
-### UC-4: Link to Spotify Account
-
-**Actors:** Users registering with soundscape.
-
-**Triggers:** Users entering the sign in page.
-
-**Preconditions:** User is not logged in and navigated to the site.
-
-**Postconditions:** User is logged into the site with their Spotify account.
-
-**Success Scenario Steps:**
-1. User clicks sign in
-2. User is navigated to Spotify to sign in with their account/auth
-3. User is prompted to give permissions to Soundscape from their Spotify account
-4. User is directed back to Soundscape and is logged in
-
-**Extensions/Variations:**
-- The user has to create a new spotify account if they do not already have one
-
-**Exceptions:**
-- The user doesn't grant Soundscape with proper permissions from their Spotify account, so the user would not be able to user soundscape features
-- The Spotify API breaks, and the user is unable to connect their Spotify account
-- Spotify is not available in the user's region, and does not have an account with them
-
 ---
 
 ## Non-Functional Requirements
@@ -163,11 +112,8 @@ Display error messages upon any error, and never crash due to user input
 Protect sensitive data so that only posts made public by the user are seen by all users
 
 ### NFR-3: Performance & Scalability
-Soundscape shall load the map location feed in under 3 seconds for a user with up to 100 friends.
+Soundscape shall load the map location feed in under 5 seconds for a user.
 - Utilize indexing: user_id, friend_id, timestamp
-
-### NFR-4: Reliability
-To preserve functionality, if Spotify is not functioning, Soundscape will allow users to create posts through manual song search. (i.e. YouTube, Shazam)
 
 ---
 
@@ -189,7 +135,7 @@ The scope of the project must match the resources (number of team members) assig
 
 ## Technical Approach
 
-We will implement an architecture using a React/Typescript frontend, Node.js/Express backend, and Supabase for the database and authentication. The frontend will use Leaflet as a library for map interactivity. The backend will coordinate with the Spotify API for music coordination. Supabase will store users, friendships, posts, and other relevant user data.
+We will implement an architecture using a React/Typescript frontend, Node.js/Express backend, and Supabase for the database and authentication. The frontend will use Leaflet as a library for map interactivity. Supabase will store users, posts, and other relevant user data.
 
 ---
 
@@ -201,10 +147,8 @@ The most serious risk is integrating with a third-party music service API since 
 
 ## Major Features
 - User authentication and profile management
-- Friend system
 - Create a post
-- Music provider integration (i.e. Spotify)
-- View friend's most recent post on a map with clickable markers
+- View most recent posts on a map with clickable markers
 
 ### Stretch Goals
 - Post history on timeline
@@ -218,28 +162,25 @@ The most serious risk is integrating with a third-party music service API since 
 Uses a Client-Server web architecture with layered separation:
 - **Client (React):** user interface and map rendering
 - **Server (Node.js/Express):** API, input validation, authorization
-- **Data (Supabase):** Stores users, friendships and posts. Handles authentication
+- **Data (Supabase):** Stores users and posts. Handles authentication
 
 ### 1.2 Major Components and Responsibilities
 
 #### React Web Client
-- **Pages:** Login, Map, Create Post, Friends
+- **Pages:** Login, Map, Create Post
 - Shows posts on a map using Leaflet
 - Sends API requests to backend and displays responses or errors
 - UI validation
 
 #### Node.js/Express Backend
-- Contains data for posts, feed, and friends
+- Contains data for posts, feed
 - Validates inputs such as missing fields or coordinates
-- Privacy rules (friends-only posts)
+- Privacy rules
 - Verify user identity (Supabase)
 
 #### Supabase
 - **Authentication:** sign up, sign in, session token
-- **Postgres database:** stores profiles, friends, posts
-
-#### Optional Spotify
-- Backend uses Spotify API for track search and selection
+- **Postgres database:** stores profiles, posts
 
 ### 1.3 Interfaces Between Components
 
@@ -252,10 +193,6 @@ Uses a Client-Server web architecture with layered separation:
 - Uses Supabase server client to read/write Postgres tables
 - Backend checks authorization before returning data
 
-#### Backend to Spotify
-- HTTPS requests to Spotify API
-- Tokens stored server-side
-
 ### 1.4 Data Storage and High-Level Database Schema
 
 All data will be stored in Supabase PostgresSQL database. Tables will be used to support the core features.
@@ -265,12 +202,6 @@ Stores the information about each user:
 - User ID
 - Username
 - Account creation date
-
-#### Friends Table
-Stores which users are connected as friends:
-- ID of the first user
-- ID of the friend user
-- Date friendship was created
 
 Each row of the table represents the connection between two users to allow the system to determine which user can see what posts.
 
@@ -285,13 +216,11 @@ Stores all music moment posts created by users:
 
 Each post will be linked to the user who created it.
 
-The map feed will retrieve the most recent posts from the back end and display posts from each of the user's friends to display them as markers on the map.
+The map feed will retrieve the most recent posts from the back end and display posts as markers on the map.
 
 ### 1.5 Architectural Assumptions
 - Soundscape is a web app
-- Posts are friends-only
 - (Optional) Location permissions
-- Manual song entry is MVP, Spotify is stretch goal
 - Backend is source for validation and access rules
 
 ### 1.6 Architecture Decisions and Alternatives
@@ -304,7 +233,7 @@ The map feed will retrieve the most recent posts from the back end and display p
 
 #### Decision 2: Use single Node/Express service
 - **Chosen:** One backend service for all endpoints
-- **Alternative:** Microservices that separates services for posts, friends, feed
+- **Alternative:** Microservices that separates services for posts, feed
   - Pros: Independent deployment per service
   - Cons: Too complex
 
@@ -315,23 +244,23 @@ The map feed will retrieve the most recent posts from the back end and display p
 ### 2.1 React Frontend Design (TypeScript)
 
 #### Pages
-- `loginpage.tsx` – sign in/sing up UI
-- `mapfeedpage.tsx` – map and markers
-- `createpost.tsx` – post form, location picker, submit
-- `friendspage.tsx` – add/remove friends
+- `Login.tsx` – sign in/sign up UI
 
 #### Components
-- `mapview.tsx` – leaflet, renders markers
-- `postmodal.tsx` – shows post details when marker is hovered or clicked
-- `locationpicker.tsx` – gets current location or pin drop
+- `MapView.tsx` – leaflet, renders markers
+- `LoginForm.tsx` – login form
+- `SignUpForm.tsx` – sign up form
+- `LogoutButton.tsx` – logout button
+- `MakePost.tsx` – post form, location picker, submit
 
 #### Services
-- `apiclient.ts` – handles JSON, errors
-- `postapi.ts` – functions for create post and feed
-- `friendapi.ts` – functions for add/remove and lists friends
+- `supabase.ts` – Supabase client
 
-#### Types
-- Type definitions (posts, profile, friend)
+#### Context
+- `AuthContext.tsx` – auth state management
+
+#### Entry
+- `main.tsx` – app entry point
 
 **Responsibilities:**
 - Pages manage workflows and what is seen on a screen
@@ -342,9 +271,9 @@ The map feed will retrieve the most recent posts from the back end and display p
 
 #### Planned Structure (source files and directories)
 - `server.ts` – creates express app and registers middleware
-- **Routes** – posts, friends, feed
-- **Controllers** – posts, friends, feed
-- **Services** – posts, friends, feed
+- **Routes** – posts, feed
+- **Controllers** – posts, feed
+- **Services** – posts, feed
 - **Middleware** – validate Supabase JWT, and validates what is requests in required fields (i.e. post form, user login/signup)
 - **db** – initializes server-side Supabase client, contains DB query helpers
 
@@ -356,15 +285,6 @@ The map feed will retrieve the most recent posts from the back end and display p
 
 ### 2.3 Endpoint Definitions
 
-#### Friends
-- **POST**
-  - Input: Username
-  - Output: friendship created
-- **GET**
-  - Output: list friends
-- **DELETE**
-  - Output: deletion success or error
-
 #### Posts
 - **POST**
   - Input: song title, artist, comment, location
@@ -372,13 +292,8 @@ The map feed will retrieve the most recent posts from the back end and display p
 - **DELETE**
   - Only authorized user can delete post
 
-#### Feed
-- **GET**
-  - Lists the friends most recent posts with details
-
 ### 2.4 Key Authorization Rules
 - User can create and delete their own posts
-- User can only view posts of other users they are friends with
 - Output error if else.
 
 ---
@@ -446,18 +361,15 @@ TypeScript Style Guide: https://ts.dev/style
 - Create documentation plan
 - Plan schedule and assess possible risks for the project
 
-### Week 6: Database and Page Design, Spotify Authentication Implementation
+### Week 6: Database and Page Design
 - Create database schema for all scheduled features (including stretch goals)
 - Make visual mockups of the website pages
-- Create authentication with the Spotify API
 
 ### Week 7: Map API/Database CRUD Implementation, Authentication Testing/Patching
 - Create user-facing system for doing CRUD operations with the database
 - Add the map API to the website
-- Test for and patch flaws in the Spotify API authentication system
 
-### Week 8: Friends System Implementation and Testing, Map/CRUD Testing/Patching, Beta Release
-- Create user-facing friends system, and test/patch for flaws
+### Week 8: Map/CRUD Testing/Patching, Beta Release
 - Test for and patch flaws with the map API implementation
 - Test for and patch flaws with the database CRUD interactions
 - Create beta release
@@ -491,28 +403,26 @@ TypeScript Style Guide: https://ts.dev/style
 - Authentication functions
 - Post Creation validation
 - Database query
-- Pulling song data with Spotify API wrapper function
 
 **How we're testing:**
 - **Testing framework:** Jest and React Testing Library for frontend, Jest for backend. Mock API calls. Edge cases for validation (empty fields, invalid GPS, long text, rate limits).
 - **Approach:** Isolated tests
 - **Coverage goals:** 80% code coverage on frontend and backend minimum.
-- **Why:** Testing authorization makes sure only the right people can access the system. Testing posts stops malicious or invalid data from being saved. Testing the Spotify wrapper functions reduce risk from our biggest potential problem point. 80% code coverage is a reasonable threshold that balances time with certainty.
+- **Why:** Testing authorization makes sure only the right people can access the system. Testing posts stops malicious or invalid data from being saved. 80% code coverage is a reasonable threshold that balances time with certainty.
 
 ### Integration/System Testing
 
 **What we're testing:**
 - Frontend to Backend API calls
 - Backend to Supabase database
-- Spotify API integration
 - **[End-to-end scenario 1]** User creates post from song selection through database storage and map display
 - **[End-to-end scenario 2]** User sees other's posts appear on map
 
 **How we're testing:**
 - **Tools:** Cypress
 - **Approach:** Automated browser tests simulate user interactions and test correct outcomes.
-- **Test environment:** Separate testing database in Supabase, test Spotify API credentials, local development servers
-- **Why:** These integration tests cover our main use cases. Testing the Spotify integration addresses our biggest identified risk. Testing post creation and map-view ensures the main user experience works end-to-end.
+- **Test environment:** Separate testing database in Supabase, local development servers
+- **Why:** These integration tests cover our main use cases. Testing post creation and map-view ensures the main user experience works end-to-end.
 
 ### Usability Testing
 
