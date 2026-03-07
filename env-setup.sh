@@ -50,7 +50,7 @@ if [ ! -f "server/.env" ] || [ ! -f "client/.env" ]; then
 
     # create HTTPS keys
     pass=$(getHTTPSPassword)
-    $(generateHTTPSKeyAndCert $pass)
+    generateHTTPSKeyAndCert "$pass"
     
     # write server env file
     port="8000"
@@ -67,7 +67,7 @@ if [ ! -f "server/.env" ] || [ ! -f "client/.env" ]; then
     echo "# .env" >> client/.env
     echo "VITE_PUBLIC_SUPABASE_URL=$supabaseUrl" >> client/.env
     echo "VITE_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=$supabaseKey" >> client/.env
-    echo "VITE_SERVER_URL=https://localhost:8000" >> client/.env
+    echo "VITE_SERVER_URL=http://localhost:8000" >> client/.env
     echo "VITE_COOKIE_HOST_URL=.localhost" >> client/.env
 
     # check HTTPS certifications 
@@ -78,7 +78,7 @@ elif [ ! -f "server/cert.pem" ] || [ ! -f "server/key.pem" ]; then
     passEnvLine=$(grep "HTTPS_KEY_PASSPHRASE=" server/.env)
 
     # get password for keys
-    if [ -z passEnvLine ]; then
+    if [ -z "$passEnvLine" ]; then
         pass=$(getHTTPSPassword)
 
         echo "HTTPS_KEY_PASSPHRASE=$pass" >> server/.env

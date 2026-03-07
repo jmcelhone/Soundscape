@@ -7,7 +7,7 @@ import cors from "cors";
 const app = express()
 
 // middleware
-const corsOrigin = process.env.NODE_ENV === 'production' ? process.env.CLIENT_ORIGIN! : "*";
+const corsOrigin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
 app.use(cors({
     origin: corsOrigin,
     credentials: true,
@@ -42,11 +42,14 @@ app.post("/posts", async (req: Request, res: Response) => {
         // Build new post and insert into Supabase
         const newPost = {
             userid: userData.uid,
-            songtitle: songTitle,
-            artistname: artistName ?? "",
-            latitude,
-            longitude,
-            comment: comment ?? "",
+            time: new Date().toISOString(),
+            songid: null,
+            location: `(${latitude},${longitude})`,
+            comment: {
+                songTitle,
+                artistName: artistName ?? "",
+                text: comment ?? "",
+            }
         };
 
         // Insert into Supabase
@@ -106,16 +109,14 @@ app.get("/feed", async (req: Request, res: Response) => {
             row.userid1 === userID ? row.userid2 : row.userid1
         );
 
-        // Return empty feed if no friends
-        if (friendsIDs.length === 0) {
-            return res.status(200).json([]);
-        }
+        // include your own posts too
+        const feedUserIDs = [...new Set([userID, ...friendsIDs])];
 
-        // Fetch posts where userid is in friendIDs by newest first
+        // Fetch posts where userid is in feedUserIDs by newest first
         const { data: posts, error: postsErr } = await supabase
             .from("posts")
-            .select("postid, userid, songtitle, artistname, latitude, longitude, comment")
-            .in("userid", friendsIDs)
+            .select("postid, userid, time, location, comment")
+            .in("userid", feedUserIDs)
             .order("time", { ascending: false })
             .limit(20);
 

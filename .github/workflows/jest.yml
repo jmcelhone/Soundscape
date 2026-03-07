@@ -26,7 +26,7 @@ jobs:
     - name: Build vite page
       run: |
         cd client
-        npm i
+        npm install
         npm run build
 
   test:
@@ -41,11 +41,11 @@ jobs:
         
     - name: Install dependencies
       run: |
-        npm i
+        npm install
         cd server
-        npm i
+        npm install
         cd ../client
-        npm i
+        npm install
     
     - name: Create server env file
       run: |
