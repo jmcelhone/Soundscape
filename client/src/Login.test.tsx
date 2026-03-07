@@ -47,7 +47,7 @@ describe('Login', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Sign In' }));
 
     await waitFor(() => {
-      expect(mockSignIn).toHaveBeenCalledWith({ email: 'test@test.com', password: 'password123' });
+      expect(mockSignIn).toHaveBeenCalledWith({ email: 'test@test.com', password: 'password123'});
     });
   });
 
@@ -85,6 +85,7 @@ describe('Login', () => {
     render(<Login />);
     fireEvent.click(screen.getByText('Sign Up'));
     fireEvent.change(screen.getByPlaceholderText('Enter email'), { target: { value: 'test@test.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Enter username'), { target: { value: 'test_user' } });
     fireEvent.change(screen.getByPlaceholderText('Enter password'), { target: { value: 'password123' } });
     fireEvent.click(screen.getByRole('button', { name: 'Sign Up' }));
 
@@ -111,7 +112,7 @@ describe('Login', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Sign Up' }));
 
     await waitFor(() => {
-      expect(screen.getByText('Password is too weak. Please use a strong password.')).toBeInTheDocument();
+      expect(screen.getByText('Password is too weak. Please use a password of at least 6 characters.')).toBeInTheDocument();
     });
   });
 
