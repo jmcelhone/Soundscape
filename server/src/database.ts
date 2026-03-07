@@ -4,8 +4,8 @@ import { type Database } from './supabase.ts';
 import { type Request, type Response } from 'express';
 
 export function createClient(req: Request, res: Response) {
-    const supabaseURL = process.env.SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_PUBLISHABLE_KEY!;
+    const supabaseURL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!;
 
     return createServerClient(
         supabaseURL,
