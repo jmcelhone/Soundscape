@@ -43,7 +43,7 @@ const Login = () => {
     }
   };
 
-  const handleSignUp = async (email: string, password: string, name?: string) => {
+  const handleSignUp = async (email: string, password: string, username: string) => {
     setError(null);
     setIsLoading(true);
     
@@ -53,6 +53,7 @@ const Login = () => {
             email: email,
             password: password,
             options: {
+                data: {display_name: username},
                 emailRedirectTo: "http://localhost:5173/"
             }
         });
@@ -61,7 +62,7 @@ const Login = () => {
         if (error.code === 'user_already_exists') {
           setError('An account with this email already exists. Please sign in instead.');
         } else if (error.code ===('weak_password')) {
-          setError('Password is too weak. Please use a strong password.');
+          setError('Password is too weak. Please use a password of at least 6 characters.');
         } else {
           setError(error.message);
         }
