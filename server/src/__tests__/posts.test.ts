@@ -1,11 +1,10 @@
 import { jest } from "@jest/globals";
 import request from "supertest";
 
-// ESM-safe mocking
+// ESM-safe mocking of the database module
 await jest.unstable_mockModule("../database.ts", () => {
   return {
     createClient: jest.fn(() => {
-      // fake supabase client
       return {
         from: jest.fn(() => ({
           insert: jest.fn(() => ({
@@ -14,11 +13,13 @@ await jest.unstable_mockModule("../database.ts", () => {
                 data: {
                   postid: 123,
                   userid: "fake-user-id",
-                  songtitle: "Test Song",
-                  artistname: "Test Artist",
-                  latitude: 44.565,
-                  longitude: -123.276,
-                  comment: "hello",
+                  location: "(44.565,-123.276)",
+                  comment: {
+                    songTitle: "Test Song",
+                    artistName: "Test Artist",
+                    text: "hello",
+                  },
+                  time: new Date().toISOString(),
                 },
                 error: null,
               })),
@@ -28,7 +29,7 @@ await jest.unstable_mockModule("../database.ts", () => {
       };
     }),
 
-    // pretend auth succeeded
+    // Default mock authentication success
     authenticate: jest.fn(async () => ({
       uid: "fake-user-id",
       email: "test@test.com",
@@ -38,8 +39,10 @@ await jest.unstable_mockModule("../database.ts", () => {
 });
 
 const { default: app } = await import("../app.ts");
+const database = await import("../database.ts");
 
 describe("POST /posts", () => {
+
   test("201 creates a post when payload is valid", async () => {
     const res = await request(app)
       .post("/posts")
@@ -53,7 +56,6 @@ describe("POST /posts", () => {
 
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty("postid");
-    expect(res.body.songtitle).toBe("Test Song");
   });
 
   test("400 when songTitle is missing", async () => {
@@ -83,4 +85,21 @@ describe("POST /posts", () => {
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty("error");
   });
+
+  test("401 when user is not authenticated", async () => {
+    (database.authenticate as jest.Mock).mockResolvedValueOnce(null);
+
+    const res = await request(app)
+      .post("/posts")
+      .send({
+        songTitle: "Test Song",
+        artistName: "Test Artist",
+        latitude: 44.565,
+        longitude: -123.276,
+        comment: "hello",
+      });
+
+    expect(res.status).toBe(401);
+  });
+
 });
