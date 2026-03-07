@@ -2,7 +2,7 @@ import { jest } from "@jest/globals";
 import request from "supertest";
 
 // ESM-safe mocking of the database module
-await jest.unstable_mockModule("../database.ts", () => {
+await jest.unstable_mockModule("../src/database.ts", () => {
   return {
     createClient: jest.fn(() => {
       return {
@@ -38,11 +38,10 @@ await jest.unstable_mockModule("../database.ts", () => {
   };
 });
 
-const { default: app } = await import("../app.ts");
-const database = await import("../database.ts");
+const { default: app } = await import("../src/app.ts");
+const database = await import("../src/database.ts");
 
 describe("POST /posts", () => {
-
   test("201 creates a post when payload is valid", async () => {
     const res = await request(app)
       .post("/posts")
@@ -101,5 +100,4 @@ describe("POST /posts", () => {
 
     expect(res.status).toBe(401);
   });
-
 });
