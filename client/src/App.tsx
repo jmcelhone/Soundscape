@@ -34,30 +34,33 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header"></header>
-{session ? (
-  <>
-    <h1>Soundscape</h1>
-    <MapView latestPost={latestPost} feedRefresh={feedRefresh} />
-    <MakePost onPostCreated={handleNewPost} />
-    <LogoutButton />
-  </>
-) : (
-  <div className="landing-page">
-    <div className="landing-bg">
-      <div className="landing-content">
-        <h1>Soundscape</h1>
-        <p>
-          Soundscape is a music-sharing social platform that creates a map-based
-          feed of music sharing personal moments. This enables users to discover
-          music through friend's real world experiences.
-        </p>
-        <Login />
-      </div>
+      <div className="App">
+        <header className="App-header"></header>
+        {session ? (
+            <>
+            <h1>Soundscape</h1>
+            <MapView latestPost={latestPost} feedRefresh={feedRefresh} />
+            <MakePost onPostCreated={handleNewPost} />
+            <LogoutButton />
+            </>
+        ) : (
+            <div className="landing-page">
+                <div className="landing-bg">
+                    <div className="landing-content">
+                        <h1>Soundscape</h1>
+                        <p>
+      Soundscape is a music-sharing social platform that creates a map-based
+      feed of music sharing personal moments. This enables users to discover
+      music through friend's real world experiences.
+                        </p>
+                        <Login />
+                    </div>
+                </div>
+            </div>
+      )}
     </div>
-  </div>
-)}
+  );
+}
 
 function App() {
 	return (
