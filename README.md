@@ -34,6 +34,7 @@ Jeremy McElhone
     - Artist name
     - Comment
 - Post creation takes your current location from device to make posts
+<img width="1798" height="916" alt="image" src="https://github.com/user-attachments/assets/7bc79b40-f069-42e5-927e-bcc35bf04821" />
 
 # Access Server
 
