@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createClient } from './supabase.ts';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
-import './Login.css'
+import './style/Login.css'
 
 
 const Login = () => {
@@ -79,9 +79,8 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-container">
       <div className="auth-box">
-        <h2>{isSignIn ? 'Sign In' : 'Sign Up'}</h2>
+        <h2 className='signin-header'>{isSignIn ? 'Sign In' : 'Sign Up'}</h2>
         
         {error && (
           <div className="error-message">
@@ -119,7 +118,6 @@ const Login = () => {
           )}
         </div>
       </div>
-    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './style/App.css';
 import MakePost from "./MakePost.tsx";
 import { useEffect, useState } from "react";
 import SignUpForm from "./SignUpForm.tsx";
@@ -36,22 +36,28 @@ function AppContent() {
   return (
     <div className="App">
       <header className="App-header"></header>
-      <h1>Soundscape</h1>
-      <h2>{message}</h2>
-	  {session ? (
-	  	<>
-			<MapView latestPost={latestPost} feedRefresh={feedRefresh} />
-			<MakePost onPostCreated={handleNewPost} />
-			<LogoutButton />
-		</>
-	  ) : (
-	  		<>
-				<Login />
-			</>
-		)}
+{session ? (
+  <>
+    <h1>Soundscape</h1>
+    <MapView latestPost={latestPost} feedRefresh={feedRefresh} />
+    <MakePost onPostCreated={handleNewPost} />
+    <LogoutButton />
+  </>
+) : (
+  <div className="landing-page">
+    <div className="landing-bg">
+      <div className="landing-content">
+        <h1>Soundscape</h1>
+        <p>
+          Soundscape is a music-sharing social platform that creates a map-based
+          feed of music sharing personal moments. This enables users to discover
+          music through friend's real world experiences.
+        </p>
+        <Login />
+      </div>
     </div>
-  );
-}
+  </div>
+)}
 
 function App() {
 	return (

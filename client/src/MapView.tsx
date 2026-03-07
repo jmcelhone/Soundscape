@@ -5,16 +5,18 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png?url";
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import './MapView.css';
+import './style/MapView.css';
 
 const defaultZoom = 20;
 const defaultCoords: [number, number] = [44.56699643037226, -123.2737945750708];
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/461/461238.png',
+  iconRetinaUrl: 'https://cdn-icons-png.flaticon.com/512/461/461238.png',
+  shadowUrl: markerShadow, // Keep the shadow if you like it, or set to null to remove
+  iconSize: [35, 35],
+  iconAnchor: [17, 35],
 });
 
 interface PostProp {

@@ -4,7 +4,11 @@
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .error-message {
@@ -22,7 +26,6 @@
 }
 
 .toggle-link {
-  margin-top: 1rem;
   text-align: center;
   font-size: 0.875rem;
   color: #6b7280;
@@ -46,4 +49,36 @@
 .link-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.signin-header {
+  color: #3d3d55;
+  margin-top: 0;
+}
+
+.login-button {
+    background-color: #f3f3f3;
+    color: #3d3d55;
+  }
+
+input, textarea, select {
+    background-color: #f0f0f0; 
+    color: #333333;
+    border: 1px solid #cccccc; 
+  }
+
+input {
+  width: 100%;
+  display: block;
+  margin: 2px auto;
+}
+
+form > button {
+  margin-top: 15px;
+  }
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

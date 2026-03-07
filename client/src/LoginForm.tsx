@@ -33,7 +33,7 @@ export default function LoginForm({ onSubmit, isLoading = false }: LoginFormProp
                     placeholder="Enter password"
                 />
             </div>
-            <button type="submit" onClick={handleSubmit}>
+            <button className='login-button' type="submit" onClick={handleSubmit}>
                 Sign In
             </button>
         </form>
