@@ -166,7 +166,13 @@ app.get("/auth/confirm", async (req: Request, res: Response) => {
 
         console.log(data, error);
 
-        if (!error) {
+        if (data && data.user && !error) {
+            const newUserData = data.user.user_metadata;
+            await supabase.from("usernames").insert({
+                id: newUserData.sub,
+                username: newUserData.display_name,
+            });
+
             res.redirect(303, next);
             return;
         }
