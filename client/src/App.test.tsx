@@ -24,7 +24,7 @@ beforeEach(() => {
   (global.fetch as any).mockResolvedValue({
     ok: true,
     text: async () => 'Hello from server',
-    json: async () => [],
+    json: async () => {},
   });
 });
 

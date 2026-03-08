@@ -23,22 +23,25 @@ Object.defineProperty(global.navigator, 'geolocation', { value: mockGeolocation 
 
 global.fetch = vi.fn();
 
-const mockFeedPosts = [
-  {
-    postid: 1,
-    userid: 'user-1',
-    time: '2026-01-01',
-    location: '(44.565,-123.276)',
-    comment: { songTitle: 'Test Song', artistName: 'Test Artist', text: 'Epic' },
-  },
-  {
-    postid: 2,
-    userid: 'user-2',
-    time: '2026-01-02',
-    location: '(44.566,-123.277)',
-    comment: null,
-  },
-];
+const mockFeedPosts = {
+    posts: [
+        {
+            postid: 1,
+            userid: 'user-1',
+            time: '2026-01-01',
+            location: '(44.565,-123.276)',
+            comment: { songTitle: 'Test Song', artistName: 'Test Artist', text: 'Epic' },
+        },
+        {
+            postid: 2,
+            userid: 'user-2',
+            time: '2026-01-02',
+            location: '(44.566,-123.277)',
+            comment: null,
+        },
+    ],
+    users: []
+};
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -137,9 +140,14 @@ describe('MapView', () => {
   it('skips render of marker for invalid location', async () => {
     (global.fetch as any).mockResolvedValue({
       ok: true,
-      json: async () => [
-        { postid: 3, userid: 'u', time: '', location: 'invalid', comment: null },
-      ],
+      json: async () => {
+          return {
+              posts: [
+                  { postid: 3, userid: 'u', time: '', location: 'invalid', comment: null },
+              ],
+              users: []
+          }
+      },
     });
 
     await act(async () => {

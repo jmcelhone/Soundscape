@@ -73,7 +73,7 @@ app.post("/posts", async (req: Request, res: Response) => {
 });
 
 // GET feed of posts
-// Returns the latest post for each friend
+// Returns the latest post for all users
 app.get("/feed", async (req: Request, res: Response) => {
     // create supabase client
     const supabase = createClient(req, res);
@@ -93,30 +93,10 @@ app.get("/feed", async (req: Request, res: Response) => {
             return res.status(400).send("userID query parameter is required");
         }
 
-        // friends table columns: userid1, userid2
-        const { data: friendsRows, error: friendErr } = await supabase
-            .from("friends")
-            .select("userid1, userid2")
-            .or(`userid1.eq.${userID},userid2.eq.${userID}`);
-        
-        if (friendErr) {
-            console.error(friendErr);
-            return res.status(500).send("Friends query failed");
-        }
-
-        // Friends rows gets converted into a list of friend IDs.
-        const friendsIDs = (friendsRows ?? []).map((row) =>
-            row.userid1 === userID ? row.userid2 : row.userid1
-        );
-
-        // include your own posts too
-        const feedUserIDs = [...new Set([userID, ...friendsIDs])];
-
         // Fetch posts where userid is in feedUserIDs by newest first
         const { data: posts, error: postsErr } = await supabase
             .from("posts")
             .select("postid, userid, time, location, comment")
-            .in("userid", feedUserIDs)
             .order("time", { ascending: false })
             .limit(20);
 
@@ -125,8 +105,25 @@ app.get("/feed", async (req: Request, res: Response) => {
             return res.status(500).send("Posts query failed");
         }
 
+        let usersInQuery: string[] = [];
+        for (const post of posts) {
+            if (!usersInQuery.includes(post.userid)) {
+                usersInQuery.push(post.userid);
+            }
+        }
+
+        const { data: usernames, error: usernamesErr } = await supabase
+            .from("usernames")
+            .select()
+            .in("id", usersInQuery);
+
+        if (usernamesErr) {
+            console.error(usernamesErr);
+            return res.status(500).send("Users query failed");
+        }
+
         // Return posts to frontend
-        return res.status(200).json(posts ?? []);
+        return res.status(200).json({ posts: posts ?? [], users: usernames ?? [] });
     } catch (err) {
         console.error(err);
         return res.status(500).send("Server error");
@@ -166,7 +163,13 @@ app.get("/auth/confirm", async (req: Request, res: Response) => {
 
         console.log(data, error);
 
-        if (!error) {
+        if (data && data.user && !error) {
+            const newUserData = data.user.user_metadata;
+            await supabase.from("usernames").insert({
+                id: newUserData.sub,
+                username: newUserData.display_name,
+            });
+
             res.redirect(303, next);
             return;
         }
