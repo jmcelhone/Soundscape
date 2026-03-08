@@ -35,7 +35,6 @@ type FeedPost = {
   userid: string;
   time: string;
   location: string;
-  username?: string;
   comment: {
     songTitle?: string;
     artistName?: string;
