@@ -105,8 +105,25 @@ app.get("/feed", async (req: Request, res: Response) => {
             return res.status(500).send("Posts query failed");
         }
 
+        let usersInQuery: string[] = [];
+        for (const post of posts) {
+            if (!usersInQuery.includes(post.userid)) {
+                usersInQuery.push(post.userid);
+            }
+        }
+
+        const { data: usernames, error: usernamesErr } = await supabase
+            .from("usernames")
+            .select()
+            .in("id", usersInQuery);
+
+        if (usernamesErr) {
+            console.error(usernamesErr);
+            return res.status(500).send("Users query failed");
+        }
+
         // Return posts to frontend
-        return res.status(200).json(posts ?? []);
+        return res.status(200).json({ posts: posts ?? [], users: usernames ?? [] });
     } catch (err) {
         console.error(err);
         return res.status(500).send("Server error");

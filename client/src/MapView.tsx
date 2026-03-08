@@ -35,11 +35,17 @@ type FeedPost = {
   userid: string;
   time: string;
   location: string;
+  username?: string;
   comment: {
     songTitle?: string;
     artistName?: string;
     text?: string;
   } | null;
+};
+
+type UsersNames = {
+    id: string;
+    username: string;
 };
 
 function MapUpdater({ position }: { position: [number, number] | null }) {
@@ -71,6 +77,7 @@ function parseLocationPoint(point: string): [number, number] | null {
 function MapView({ latestPost, feedRefresh }: PostProp) {
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
+  const [names, setNames] = useState<UsersNames[]>([]);
 
   // Grab user's current location (for centering map)
   useEffect(() => {
@@ -93,9 +100,12 @@ function MapView({ latestPost, feedRefresh }: PostProp) {
           throw new Error(text);
         }
 
-        const data: FeedPost[] = await res.json();
+        const data = await res.json();
         console.log("Feed data from backend:", data);
-        setFeedPosts(data);
+        const posts = data.posts as FeedPost[];
+        const dataNames = data.users as UsersNames[];
+        setNames(dataNames);
+        setFeedPosts(posts);
 
       } catch (err) {
         console.error("Failed to fetch feed:", err);
@@ -115,6 +125,7 @@ function MapView({ latestPost, feedRefresh }: PostProp) {
         <MapUpdater position={position} />
 
         {/* Show posts from feed */}
+
         {feedPosts.map((post) => {
           const coords = parseLocationPoint(post.location);
           if (!coords) return null;
@@ -122,6 +133,8 @@ function MapView({ latestPost, feedRefresh }: PostProp) {
           return (
             <Marker key={post.postid} position={coords}>
               <Popup>
+                <b>{names.find(user => user.id === post.userid)?.username ?? "anonymous"}</b>
+                <br />
                 <b>{post.comment?.songTitle ?? "Unknown Song"}</b>
                 <br />
                 {post.comment?.artistName ?? ""}
