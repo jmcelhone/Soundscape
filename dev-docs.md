@@ -154,3 +154,15 @@ The environment setup script will not be run, and the environment file may not b
 setup correctly see [Set-up Environment](User-Manual.md#set-up-environment) for
 more information. `npm install` should be run on each deployment from both the
 `client` and `server` directories.
+
+For deployment for release on a production server, make sure that the environment
+variables are set properly for that server:
+- `client/.env`:
+    - `VITE_SERVER_URL` - link to the backend server
+    - `VITE_COOKIE_HOST_URL` - URL to be put in user session cookies
+- `server/.env`:
+    - `COOKIE_HOST_URL` - URL to be put in user session cookies
+- URL rewrites/redirects
+    - `/api*` - rewrite to server URL
+    - `/auth/confirm*` - redirect to server URL + `/auth/confirm*` for email
+    verification redirects
