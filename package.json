@@ -4,6 +4,8 @@
       "test": "./env-setup.sh && concurrently \"npm run test --prefix server\" \"npm run test --prefix client\""
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "start-server-and-test": "^2.1.5",
+    "cypress": "^15.10.0"
   }
 }

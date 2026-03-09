@@ -53,8 +53,9 @@ jobs:
         echo "HTTPS_KEY_PASSPHRASE=${{ secrets.HTTPS_KEY_PASSPHRASE }}" >> server/.env
         echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> server/.env
         echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> server/.env
+        echo "COOKIE_HOST_URL=.localhost" >> server/.env
         
-    - name: Create server https keys
+    - name: Import server https keys
       run: |
         echo "${{ secrets.TEST_KEY }}" > server/key.pem
         echo "${{ secrets.TEST_CERT }}" > server/cert.pem
@@ -63,7 +64,8 @@ jobs:
       run: |
         echo "VITE_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> client/.env
         echo "VITE_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}" >> client/.env
-        echo "VITE_SERVER_URL=https://placeholder.url" >> client/.env
+        echo "VITE_SERVER_URL=https://localhost:8000" >> client/.env
+        echo "VITE_COOKIE_HOST_URL=.localhost" >> client/.env
 
     - name: Run server tests
       run: |
@@ -74,3 +76,7 @@ jobs:
       run: |
         cd client
         npm run test
+    
+    - name: Run integration tests
+      run: |
+        npx start-server-and-test 'npm run dev' http://localhost:5173 'npx cypress run'

@@ -46,7 +46,13 @@ soundscape/
 │   ├── package.json
 │   ├── package-lock.json
 │   └── tsconfig.json
+├── cypress/
+|   ├── e2e/
+|   ├── fixtures/
+|   ├── screenshots/
+|   └── support/
 ├── .gitignore
+├── cypress.config.js
 ├── package.json
 ├── package-lock.json
 ├── tsconfig.json
@@ -116,6 +122,8 @@ Tests can be run individually in the `client` and `server` directories with
 `npm run test`. The environment setup script will not run in this case. The
 environment file may not be setup properly, and `npm install` may be needed
 in order to install packages needed.
+
+Integrations test can be run in the root directory. Make sure the application is running locally and run `npx cypress run` to run all cypress tests. An individual test file can be run with `npx cypress run --spec "cypress/e2e/path/to/file"` and run tests with a specfic browser by running `npx cypress run --browser chrome`. To use the cypress GUI to interactively run and create tests run `npx cypress open`.
 
 ## How to Add New Tests
 
