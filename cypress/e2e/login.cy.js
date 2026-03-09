@@ -23,7 +23,7 @@ describe('login spec', () => {
 
     cy.get('input[placeholder="Enter email"]').type('test@email.mail')
     cy.get('input[placeholder="Enter password"]').type('pass10')
-    cy.get('button[type="submit"]').click().then
+    cy.get('button[type="submit"]').click()
 
     cy.wait('@loginRequest').then((interception) => {
     expect(interception.response?.statusCode).to.equal(200)
@@ -49,7 +49,12 @@ describe('login spec', () => {
   })
 
   it('creates new account with sign up', () => {
+    const testUser = {
+      email: `test-${Date.now()}@example.com`,
+      password: 'TestPassword123!'
+    }
     cy.get('.link-button').click()
+    // stubbing the signup to prevent new accounts being made every time test is run
     cy.intercept('POST', '**/auth/v1/signup*', {
     statusCode: 200,
     body: {
