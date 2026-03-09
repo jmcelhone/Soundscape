@@ -75,6 +75,6 @@ jobs:
         cd client
         npm run test
     
-    -name: Run integration tests
+    - name: Run integration tests
       run: |
         npx cypress run
