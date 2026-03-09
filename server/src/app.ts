@@ -131,15 +131,6 @@ app.get("/feed", async (req: Request, res: Response) => {
 
 });
 
-app.get("/auth/test", async (req: Request, res: Response) => {
-    const supabase = createClient(req, res);
-    const user = await authenticate(supabase);
-
-    console.log(user);
-
-    res.status(200);
-});
-
 app.get("/auth/confirm", async (req: Request, res: Response) => {
     const tokenHash = req.query.token_hash;
     const typeString = req.query.type;
