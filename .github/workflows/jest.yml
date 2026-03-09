@@ -77,4 +77,4 @@ jobs:
     
     - name: Run integration tests
       run: |
-        npx cypress run
+        npx start-server-and-test 'npm run dev' http://localhost:5173 'npx cypress run'
