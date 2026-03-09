@@ -5,3 +5,5 @@ server/node_modules
 *.pem
 client/coverage
 server/coverage
+cypress/e2e/1-getting-started
+cypress/e2e/2-advanced-examples
