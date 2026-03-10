@@ -38,9 +38,11 @@ await jest.unstable_mockModule("../src/database.ts", () => {
           if (tableName === "posts") {
             return {
               select: jest.fn(() => ({
-                order: jest.fn(async () => ({
-                  data: mockPostsRows,
-                  error: mockPostsError,
+                order: jest.fn(() => ({
+                  limit: jest.fn(async () => ({
+                    data: mockPostsRows,
+                    error: mockPostsError,
+                  })),
                 })),
               })),
             };
@@ -48,7 +50,7 @@ await jest.unstable_mockModule("../src/database.ts", () => {
 
           if (tableName === "usersettings") {
             return {
-              select: jest.fn(() => ({
+              select: jest.fn(async () => ({
                 data: mockUserRows,
                 error: mockUsersError,
               })),
