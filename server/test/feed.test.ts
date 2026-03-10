@@ -24,11 +24,11 @@ let mockPostsRows: Array<{
 }> = [];
 let mockPostsError: any = null;
 
-let mockUserRows: Array<{
-  id: string;
+let mockUsernameRows: Array<{
+  userid: string;
   username?: string;
 }> = [];
-let mockUsersError: any = null;
+let mockUsernamesError: any = null;
 
 await jest.unstable_mockModule("../src/database.ts", () => {
   return {
@@ -48,11 +48,13 @@ await jest.unstable_mockModule("../src/database.ts", () => {
             };
           }
 
-          if (tableName === "usersettings") {
+          if (tableName === "usernames") {
             return {
-              select: jest.fn(async () => ({
-                data: mockUserRows,
-                error: mockUsersError,
+              select: jest.fn(() => ({
+                in: jest.fn(async () => ({
+                  data: mockUsernameRows,
+                  error: mockUsernamesError,
+                })),
               })),
             };
           }
@@ -79,8 +81,8 @@ describe("GET /feed", () => {
     mockPostsRows = [];
     mockPostsError = null;
 
-    mockUserRows = [];
-    mockUsersError = null;
+    mockUsernameRows = [];
+    mockUsernamesError = null;
   });
 
   test("401 when user is not authenticated", async () => {
@@ -94,7 +96,7 @@ describe("GET /feed", () => {
 
   test("200 returns empty feed object when there are no posts", async () => {
     mockPostsRows = [];
-    mockUserRows = [];
+    mockUsernameRows = [];
 
     const res = await request(app).get("/feed");
 
@@ -131,9 +133,9 @@ describe("GET /feed", () => {
       },
     ];
 
-    mockUserRows = [
-      { id: "fake-user-id", username: "me" },
-      { id: "friend-1", username: "friend" },
+    mockUsernameRows = [
+      { userid: "fake-user-id", username: "me" },
+      { userid: "friend-1", username: "friend" },
     ];
 
     const res = await request(app).get("/feed");
@@ -159,7 +161,7 @@ describe("GET /feed", () => {
     expect(res.text).toMatch(/posts query failed|server error/i);
   });
 
-  test("500 when users query fails", async () => {
+  test("500 when usernames query fails", async () => {
     mockPostsRows = [
       {
         postid: 1,
@@ -174,7 +176,7 @@ describe("GET /feed", () => {
       },
     ];
 
-    mockUsersError = { message: "users query failed" };
+    mockUsernamesError = { message: "usernames query failed" };
 
     const res = await request(app).get("/feed");
 
