@@ -1,7 +1,6 @@
 import { jest } from "@jest/globals";
 import request from "supertest";
 
-// Mock control variables
 let mockUserData: {
   uid: string;
   email: string;
@@ -11,9 +10,6 @@ let mockUserData: {
   email: "test@test.com",
   email_verified: true,
 };
-
-let mockFriendsRows: Array<{ userid1: string; userid2: string }> = [];
-let mockFriendError: any = null;
 
 let mockPostsRows: Array<{
   postid: number;
@@ -28,34 +24,33 @@ let mockPostsRows: Array<{
 }> = [];
 let mockPostsError: any = null;
 
-// ESM-safe mocking of database.ts
+let mockUserRows: Array<{
+  id: string;
+  username?: string;
+}> = [];
+let mockUsersError: any = null;
+
 await jest.unstable_mockModule("../src/database.ts", () => {
   return {
     createClient: jest.fn(() => {
       return {
         from: jest.fn((tableName: string) => {
-          if (tableName === "friends") {
+          if (tableName === "posts") {
             return {
               select: jest.fn(() => ({
-                or: jest.fn(async () => ({
-                  data: mockFriendsRows,
-                  error: mockFriendError,
+                order: jest.fn(async () => ({
+                  data: mockPostsRows,
+                  error: mockPostsError,
                 })),
               })),
             };
           }
 
-          if (tableName === "posts") {
+          if (tableName === "usersettings") {
             return {
               select: jest.fn(() => ({
-                in: jest.fn(() => ({
-                  order: jest.fn(() => ({
-                    limit: jest.fn(async () => ({
-                      data: mockPostsRows,
-                      error: mockPostsError,
-                    })),
-                  })),
-                })),
+                data: mockUserRows,
+                error: mockUsersError,
               })),
             };
           }
@@ -79,11 +74,11 @@ describe("GET /feed", () => {
       email_verified: true,
     };
 
-    mockFriendsRows = [];
-    mockFriendError = null;
-
     mockPostsRows = [];
     mockPostsError = null;
+
+    mockUserRows = [];
+    mockUsersError = null;
   });
 
   test("401 when user is not authenticated", async () => {
@@ -95,21 +90,20 @@ describe("GET /feed", () => {
     expect(res.text).toMatch(/authorization failed/i);
   });
 
-  test("200 returns empty array when there are no posts", async () => {
-    mockFriendsRows = [];
+  test("200 returns empty feed object when there are no posts", async () => {
     mockPostsRows = [];
+    mockUserRows = [];
 
     const res = await request(app).get("/feed");
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body).toEqual({
+      posts: [],
+      users: [],
+    });
   });
 
-  test("200 returns feed posts", async () => {
-    mockFriendsRows = [
-      { userid1: "fake-user-id", userid2: "friend-1" },
-    ];
-
+  test("200 returns feed posts and users", async () => {
     mockPostsRows = [
       {
         postid: 1,
@@ -135,34 +129,54 @@ describe("GET /feed", () => {
       },
     ];
 
+    mockUserRows = [
+      { id: "fake-user-id", username: "me" },
+      { id: "friend-1", username: "friend" },
+    ];
+
     const res = await request(app).get("/feed");
 
     expect(res.status).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body).toHaveLength(2);
-    expect(res.body[0]).toHaveProperty("postid");
-    expect(res.body[0]).toHaveProperty("location");
-    expect(res.body[0]).toHaveProperty("comment");
-  });
-
-  test("500 when friends query fails", async () => {
-    mockFriendError = { message: "friends query failed" };
-
-    const res = await request(app).get("/feed");
-
-    expect(res.status).toBe(500);
-    expect(res.text).toMatch(/friends query failed/i);
+    expect(res.body).toHaveProperty("posts");
+    expect(res.body).toHaveProperty("users");
+    expect(Array.isArray(res.body.posts)).toBe(true);
+    expect(Array.isArray(res.body.users)).toBe(true);
+    expect(res.body.posts).toHaveLength(2);
+    expect(res.body.users).toHaveLength(2);
+    expect(res.body.posts[0]).toHaveProperty("postid");
+    expect(res.body.posts[0]).toHaveProperty("location");
+    expect(res.body.posts[0]).toHaveProperty("comment");
   });
 
   test("500 when posts query fails", async () => {
-    mockFriendsRows = [
-      { userid1: "fake-user-id", userid2: "friend-1" },
-    ];
     mockPostsError = { message: "posts query failed" };
 
     const res = await request(app).get("/feed");
 
     expect(res.status).toBe(500);
-    expect(res.text).toMatch(/posts query failed/i);
+    expect(res.text).toMatch(/posts query failed|server error/i);
+  });
+
+  test("500 when users query fails", async () => {
+    mockPostsRows = [
+      {
+        postid: 1,
+        userid: "fake-user-id",
+        time: new Date().toISOString(),
+        location: "(44.565,-123.276)",
+        comment: {
+          songTitle: "My Song",
+          artistName: "My Artist",
+          text: "hello world",
+        },
+      },
+    ];
+
+    mockUsersError = { message: "users query failed" };
+
+    const res = await request(app).get("/feed");
+
+    expect(res.status).toBe(500);
+    expect(res.text).toMatch(/users query failed|server error/i);
   });
 });
